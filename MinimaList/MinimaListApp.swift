@@ -4,7 +4,7 @@ import SwiftUI
 struct MinimaListApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView().background(WindowAccessor())
         }
     }
 }
