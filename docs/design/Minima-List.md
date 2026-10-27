@@ -379,10 +379,10 @@ P0 Scaffold ──► P1 Core loop ──► P2 Daily usability ──► P3 Pol
 
 **Goal:** an empty window builds, runs, and has a test target. The repository currently contains no source code (see §17). Task briefs: [`docs/mvp/phase0/`](../mvp/phase0/README.md).
 
-- [ ] **P0-T1** Create the Xcode macOS App project `MinimaList`: SwiftUI lifecycle, macOS 14 deployment target, unit-test target `MinimaListTests`.
-- [ ] **P0-T2** Set the source layout (`Model/`, `Views/`, `Platform/`) and write `CLAUDE.md` with the build/test commands and repo rules.
-- [ ] **P0-T3** Add an Xcode `.gitignore` covering `xcuserdata/`, `DerivedData/`, and `.DS_Store`.
-- [ ] **P0-T4** Keep App Sandbox enabled with no network entitlement, so the app stays local-only.
+- [x] **P0-T1** Create the Xcode macOS App project `MinimaList`: SwiftUI lifecycle, macOS 14 deployment target, unit-test target `MinimaListTests`.
+- [x] **P0-T2** Set the source layout (`Model/`, `Views/`, `Platform/`) and write `CLAUDE.md` with the build/test commands and repo rules.
+- [x] **P0-T3** Add an Xcode `.gitignore` covering `xcuserdata/`, `DerivedData/`, and `.DS_Store`.
+- [x] **P0-T4** Keep App Sandbox enabled with no network entitlement, so the app stays local-only.
 - [ ] **P0-T5** Set up Zed for day-to-day editing (`sourcekit-lsp` via `xcode-build-server`). No step needs the Xcode GUI; P0-T1 writes the project file as text.
 
 **Exit criteria:** `xcodebuild build` and `xcodebuild test` succeed from the command line; the app launches to a blank window.

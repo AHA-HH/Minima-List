@@ -42,6 +42,7 @@ ENT=$(codesign -d --entitlements - --xml "$APP" 2>/dev/null | plutil -convert xm
 echo "$ENT" | grep -A1 'com.apple.security.app-sandbox' | grep -q '<true/>' || echo "FAIL: not sandboxed"
 echo "$ENT" | grep -E 'com\.apple\.security\.((network|files)\.|temporary-exception)' && echo "FAIL: extra entitlements"
 test -e "$APP/Contents/Resources/MinimaList.entitlements" && echo "FAIL: entitlements copied into bundle"
+true  # a pass prints nothing; judge by output, not exit code
 ```
 
 The command prints nothing when the task passes. `TEST` must still pass too, because the sandboxed app hosts the unit tests.
