@@ -4,6 +4,7 @@ struct ContentView: View {
     let store: TaskStore
 
     @State private var text = ""
+    @State private var category: TaskCategory = .focus
     @FocusState private var isInputFocused: Bool
 
     var body: some View {
@@ -107,6 +108,7 @@ struct ContentView: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel("Add task")
             }
+            CategorySelector(selection: $category)
             Text("Return to add")
                 .font(.caption)
                 .foregroundStyle(Color.textSecondary)
@@ -117,7 +119,7 @@ struct ContentView: View {
     }
 
     private func addTask() {
-        store.add(title: text, category: .focus)
+        store.add(title: text, category: category)
         text = ""
         isInputFocused = true
     }
