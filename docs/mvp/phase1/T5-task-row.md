@@ -37,6 +37,7 @@ Manual checks (owner, after P1-T4 shows rows):
 
 - The delete button appears on hover and disappears when the pointer leaves, and the title doesn't move.
 - A completed row shows a filled check, a dimmed struck-through title, and still shows its category name.
+- With VoiceOver on (⌘F5), moving through a row reaches a 'Delete <title>' button even when the pointer isn't over the row.
 
 ## Must pass
 

@@ -21,7 +21,7 @@ struct TaskRow: View {
                 Image(systemName: task.isComplete ? "checkmark.circle.fill" : "circle")
                     .font(.title3)
                     // The coral accent token arrives with P1-T4; Focus is the same coral.
-                    .foregroundStyle(task.isComplete ? TaskCategory.focus.color : .white.opacity(0.6))
+                    .foregroundStyle(task.isComplete ? TaskCategory.focus.color : .white.opacity(0.55))
             }
             .buttonStyle(.plain)
             .accessibilityLabel(Self.toggleLabel(for: task))
@@ -31,7 +31,7 @@ struct TaskRow: View {
                     .font(.system(.body, design: .rounded, weight: .medium))
                     .lineLimit(2)
                     .strikethrough(task.isComplete)
-                    .foregroundStyle(.white.opacity(task.isComplete ? 0.45 : 0.95))
+                    .foregroundStyle(.white.opacity(task.isComplete ? 0.45 : 0.92))
 
                 HStack(spacing: 5) {
                     Circle()
@@ -40,20 +40,22 @@ struct TaskRow: View {
                         .accessibilityHidden(true)
                     Text(task.category.label)
                         .font(.system(.caption, design: .rounded))
-                        .foregroundStyle(.white.opacity(0.6))
+                        .foregroundStyle(.white.opacity(0.55))
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
-            // Hidden by opacity, not removed, so the title never reflows and the button stays reachable.
+            // Hidden by opacity, not removed, so the title never reflows. Zero opacity would otherwise
+            // drop it from the accessibility tree; .accessibilityHidden(false) keeps it reachable while invisible.
             Button(action: onDelete) {
                 Image(systemName: "xmark")
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(.white.opacity(0.6))
+                    .foregroundStyle(.white.opacity(0.55))
             }
             .buttonStyle(.plain)
             .opacity(isHovered ? 1 : 0)
             .accessibilityLabel(Self.deleteLabel(for: task))
+            .accessibilityHidden(false)
         }
         .padding(12)
         .background(.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
