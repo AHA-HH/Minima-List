@@ -18,12 +18,13 @@ Fix the source layout that Phase 1 files go into, and write the conventions file
 1. Move `MinimaList/ContentView.swift` to `MinimaList/Views/ContentView.swift`. Xcode 16+ projects use folder-synchronised groups, so moving the file on disk is enough. If the build can't find the file, add it to the target in Xcode instead.
 2. Do **not** create empty `Model/` or `Platform/` folders. Git doesn't track empty folders; Phase 1 creates them with their first file.
 3. Create `CLAUDE.md` with these sections:
-   - **Project:** one line, plus a link to `docs/design/Minima-List.md`, and a link to `docs/mvp/` as the place for phase plans and task briefs.
+   - **Project:** one line describing a minimal, local-only floating task widget for macOS, built with SwiftUI and AppKit interop, plus a link to `docs/design/Minima-List.md`, and a link to `docs/mvp/` as the place for phase plans and task briefs.
    - **Layout:**
-     - `MinimaList/Model/`: data and persistence. No SwiftUI imports.
+     - `MinimaList/Model/`: data and persistence. No `import SwiftUI`; the one exception is `import struct SwiftUI.Color`, so `Category` can own its color (design §10).
      - `MinimaList/Views/`: SwiftUI views.
      - `MinimaList/Platform/`: AppKit interop.
      - `MinimaListTests/`: unit tests.
+     - `MinimaList/` (root): only `MinimaListApp.swift` (the `@main` entry point) and `MinimaList.entitlements`.
    - **Checks:** the exact `BUILD` and `TEST` commands from the phase README, labelled as the repository's full checks.
    - **Rules:**
      - Target macOS 14. No APIs above it without `if #available`.
