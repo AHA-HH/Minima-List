@@ -277,13 +277,13 @@ The palette should remain legible in both bright and dim desktop environments. D
 struct TaskItem: Identifiable, Codable, Equatable {
     let id: UUID
     var title: String
-    var category: Category
+    var category: TaskCategory
     var isComplete: Bool
     var createdAt: Date
 }
 ```
 
-`Category` is an enum with the MVP values `focus`, `life`, and `later`. Categories should own their display label, color, and symbol so the view layer does not duplicate presentation rules.
+`TaskCategory` is an enum with the MVP values `focus`, `life`, and `later`. Categories should own their display label, color, and symbol so the view layer does not duplicate presentation rules.
 
 ### Persistence
 
@@ -393,7 +393,7 @@ P0 Scaffold ──► P1 Core loop ──► P2 Daily usability ──► P3 Pol
 
 | ID | Task | File(s) | Depends on |
 | --- | --- | --- | --- |
-| P1-T1 | `TaskItem` model and `Category` enum, where `Category` owns its label, color, and SF Symbol | `Model/TaskItem.swift` | P0 |
+| P1-T1 | `TaskItem` model and `TaskCategory` enum, where `TaskCategory` owns its label, color, and SF Symbol | `Model/TaskItem.swift` | P0 |
 | P1-T2 | `TaskStore` (`@Observable`): `tasks`, `completedCount`, `progress`, `add`, `toggle`, `remove`, `clearCompleted`; JSON persistence to an injected `UserDefaults`; decode failure → empty list | `Model/TaskStore.swift` | P1-T1 |
 | P1-T3 | `WindowConfigurator`: transparent background, movable by background, `.floating` level, `[.canJoinAllSpaces, .fullScreenAuxiliary]`, hidden traffic lights | `Platform/WindowConfigurator.swift` | P0 |
 | P1-T4 | `ContentView` shell: header, scrolling list, and composer per the wireframe; 380 × 610 pt, 22 pt radius, color tokens; app owns the store | `Views/ContentView.swift`, `Views/Theme.swift`, `Views/Greeting.swift`, `MinimaListApp.swift` | P1-T2, P1-T3, P1-T5 |

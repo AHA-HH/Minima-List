@@ -21,7 +21,7 @@ The single owner of task data: it holds the list, derives progress, applies ever
    - No data → empty list.
    - Data that fails to decode → empty list, **and first copy the raw bytes to `"\(key).corrupt"`** so the next save can't destroy the only copy. Don't crash, and don't show an alert.
 4. Mutations, each saving immediately afterwards (JSON-encode `tasks` to `key`):
-   - `add(title: String, category: Category)`: trim whitespace and newlines. If the result is empty, do nothing (no save). Otherwise insert a new `TaskItem` at index 0.
+   - `add(title: String, category: TaskCategory)`: trim whitespace and newlines. If the result is empty, do nothing (no save). Otherwise insert a new `TaskItem` at index 0.
    - `toggle(_ id: TaskItem.ID)`: flip `isComplete` on that task. An unknown id does nothing.
    - `remove(_ id: TaskItem.ID)`: remove that task only. An unknown id does nothing.
    - `clearCompleted()`: remove every completed task.
