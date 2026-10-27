@@ -15,6 +15,10 @@ struct TaskRow: View {
         "Delete \(task.title)"
     }
 
+    static func contextToggleTitle(for task: TaskItem) -> String {
+        task.isComplete ? "Reopen" : "Mark complete"
+    }
+
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
             Button(action: onToggle) {
@@ -59,6 +63,11 @@ struct TaskRow: View {
         .padding(12)
         .background(Color.surfaceRaised, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
         .onHover { isHovered = $0 }
+        .contextMenu {
+            Button(Self.contextToggleTitle(for: task), action: onToggle)
+            Divider()
+            Button("Delete", role: .destructive, action: onDelete)
+        }
     }
 }
 

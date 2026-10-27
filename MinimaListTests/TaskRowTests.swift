@@ -16,6 +16,13 @@ struct TaskRowTests {
         #expect(TaskRow.deleteLabel(for: task) == "Delete Reply to email")
     }
 
+    @Test func contextToggleTitleFollowsState() {
+        var task = TaskItem(title: "Reply to email", category: .focus)
+        #expect(TaskRow.contextToggleTitle(for: task) == "Mark complete")
+        task.isComplete = true
+        #expect(TaskRow.contextToggleTitle(for: task) == "Reopen")
+    }
+
     @Test(arguments: [false, true])
     func bodyEvaluates(isComplete: Bool) {
         let task = TaskItem(title: "Reply to email", category: .life, isComplete: isComplete)
