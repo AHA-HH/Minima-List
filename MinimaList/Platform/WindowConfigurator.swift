@@ -17,6 +17,10 @@ enum WindowConfigurator {
         for button in [NSWindow.ButtonType.closeButton, .miniaturizeButton, .zoomButton] {
             window.standardWindowButton(button)?.isHidden = true
         }
+        // The hidden title bar still gives the content view a top safe-area inset (32 pt), and SwiftUI grows a
+        // .contentSize window by it, leaving an invisible strip above the widget. Cancel it so the window is the content's size.
+        let titlebarHeight = window.frame.height - window.contentLayoutRect.height
+        window.contentView?.additionalSafeAreaInsets = NSEdgeInsets(top: -titlebarHeight, left: 0, bottom: 0, right: 0)
     }
 }
 

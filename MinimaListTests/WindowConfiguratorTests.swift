@@ -29,4 +29,21 @@ struct WindowConfiguratorTests {
             #expect(window.standardWindowButton(button)?.isHidden == true)
         }
     }
+
+    @Test func configureCancelsTheTitleBarSafeArea() throws {
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 200, height: 200),
+            styleMask: [.titled, .closable, .miniaturizable, .resizable],
+            backing: .buffered,
+            defer: true
+        )
+
+        WindowConfigurator.configure(window)
+
+        let contentView = try #require(window.contentView)
+        let titlebarHeight = window.frame.height - window.contentLayoutRect.height
+        #expect(titlebarHeight > 0)
+        #expect(contentView.additionalSafeAreaInsets.top == -titlebarHeight)
+        #expect(contentView.safeAreaInsets.top == 0)
+    }
 }

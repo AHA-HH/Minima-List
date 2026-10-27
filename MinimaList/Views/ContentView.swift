@@ -1,17 +1,108 @@
 import SwiftUI
 
 struct ContentView: View {
+    let store: TaskStore
+
+    @State private var text = ""
+    @FocusState private var isInputFocused: Bool
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        VStack(spacing: 0) {
+            header
+            list
+            composer
         }
-        .padding()
+        .fontDesign(.rounded)
+        .frame(width: 380, height: 610)
+        .background(Color.widgetBackground)
+        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+    }
+
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("MINIMA LIST")
+                .font(.caption.bold())
+                .tracking(1.5)
+                .foregroundStyle(Color.textSecondary)
+            Text(greeting(for: .now))
+                .font(.largeTitle.weight(.semibold))
+                .foregroundStyle(Color.textPrimary)
+            Text(Date.now, format: .dateTime.weekday(.wide).day().month(.wide))
+                .font(.subheadline)
+                .foregroundStyle(Color.textSecondary)
+            HStack(spacing: 10) {
+                ProgressView(value: store.progress)
+                    .tint(Color.accentCoral)
+                Text("\(store.completedCount) of \(store.tasks.count) done")
+                    .font(.caption)
+                    .foregroundStyle(Color.textSecondary)
+            }
+            .padding(.top, 8)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 24)
+        .padding(.top, 24)
+        .padding(.bottom, 16)
+    }
+
+    private var list: some View {
+        ScrollView {
+            LazyVStack(spacing: 8) {
+                ForEach(store.tasks) { task in
+                    TaskRow(
+                        task: task,
+                        onToggle: { store.toggle(task.id) },
+                        onDelete: { store.remove(task.id) }
+                    )
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 4)
+        }
+        .frame(maxHeight: .infinity)
+    }
+
+    private var composer: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 8) {
+                TextField("Add a task…", text: $text)
+                    .textFieldStyle(.plain)
+                    .foregroundStyle(Color.textPrimary)
+                    .focused($isInputFocused)
+                    .onSubmit(addTask)
+                    .padding(12)
+                    .background(Color.surfaceRaised, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                Button(action: addTask) {
+                    Image(systemName: "plus")
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(Color.widgetBackground)
+                        .frame(width: 40, height: 40)
+                        .background(Color.accentCoral, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Add task")
+            }
+            Text("Return to add")
+                .font(.caption)
+                .foregroundStyle(Color.textSecondary)
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 12)
+        .padding(.bottom, 20)
+    }
+
+    private func addTask() {
+        store.add(title: text, category: .focus)
+        text = ""
+        isInputFocused = true
     }
 }
 
 #Preview {
-    ContentView()
+    let store = TaskStore(defaults: UserDefaults(suiteName: "preview-\(UUID())")!)
+    store.add(title: "Buy oat milk", category: .life)
+    store.add(title: "Book dentist appointment for the week after next", category: .later)
+    store.add(title: "Reply to that email", category: .focus)
+    store.toggle(store.tasks[2].id)
+    return ContentView(store: store)
 }
