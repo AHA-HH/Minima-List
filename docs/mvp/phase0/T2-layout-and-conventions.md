@@ -44,8 +44,8 @@ Fix the source layout that Phase 1 files go into, and write the conventions file
 ```sh
 # BUILD and TEST from README.md, then:
 test ! -e MinimaList/ContentView.swift && test -f MinimaList/Views/ContentView.swift
-grep -qF "xcodebuild -project MinimaList.xcodeproj -scheme MinimaList -destination 'platform=macOS' build" CLAUDE.md
-grep -qF "xcodebuild -project MinimaList.xcodeproj -scheme MinimaList -destination 'platform=macOS' test"  CLAUDE.md
+grep -qF 'xcodebuild -project MinimaList.xcodeproj -scheme MinimaList -destination "platform=macOS,arch=$(uname -m)" build' CLAUDE.md
+grep -qF 'xcodebuild -project MinimaList.xcodeproj -scheme MinimaList -destination "platform=macOS,arch=$(uname -m)" test'  CLAUDE.md
 ```
 
 ## Do not

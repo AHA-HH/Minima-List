@@ -56,11 +56,11 @@ xcodebuild -project MinimaList.xcodeproj -showBuildSettings -target MinimaList  
 xcodebuild -project MinimaList.xcodeproj -showBuildSettings -target MinimaListTests | grep -qE ' MACOSX_DEPLOYMENT_TARGET = 14\.0$' || echo "FAIL: test target"
 test "$(grep -c 'isa = PBXFileSystemSynchronizedRootGroup' MinimaList.xcodeproj/project.pbxproj)" -eq 2 || echo "FAIL: synced groups"
 grep -E 'PBXFileReference.*\.swift' MinimaList.xcodeproj/project.pbxproj && echo "FAIL: swift file listed by hand"
-D=$(mktemp -d) && git clone -q . "$D/c" && (cd "$D/c" && xcodebuild -project MinimaList.xcodeproj -scheme MinimaList -destination 'platform=macOS' build -quiet) && echo "clean clone: BUILD ok"
-git status --porcelain | grep -c xcuserdata   # must print 0
+D=$(mktemp -d) && git clone -q . "$D/c" && (cd "$D/c" && xcodebuild -project MinimaList.xcodeproj -scheme MinimaList -destination "platform=macOS,arch=$(uname -m)" build -quiet) && echo "clean clone: BUILD ok"
+git ls-files | grep -c xcuserdata   # tracked files only; must print 0
 ```
 
-Apart from the `plutil` "OK" line, the clean-clone "BUILD ok" line and the final `0`, the block prints nothing.
+Commit before running it: the clean-clone step only sees committed work. Apart from the `plutil` "OK" line, the clean-clone "BUILD ok" line and the final `0`, the block prints nothing.
 
 ## Do not
 

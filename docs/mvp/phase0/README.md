@@ -28,10 +28,10 @@ Run every command from the repository root. Briefs refer to these by name.
 
 ```sh
 # BUILD
-xcodebuild -project MinimaList.xcodeproj -scheme MinimaList -destination 'platform=macOS' build
+xcodebuild -project MinimaList.xcodeproj -scheme MinimaList -destination "platform=macOS,arch=$(uname -m)" build
 
 # TEST
-xcodebuild -project MinimaList.xcodeproj -scheme MinimaList -destination 'platform=macOS' test
+xcodebuild -project MinimaList.xcodeproj -scheme MinimaList -destination "platform=macOS,arch=$(uname -m)" test
 ```
 
 ## Out of scope for this phase

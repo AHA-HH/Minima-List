@@ -28,16 +28,19 @@ The entitlements signed into the built app (not just the `.entitlements` source 
 - `com.apple.security.app-sandbox` is `true`.
 - No key starts with `com.apple.security.network.`.
 - No key starts with `com.apple.security.files.`.
+- No key starts with `com.apple.security.temporary-exception`.
 
 ## Must pass
 
 ```sh
-# BUILD from README.md, then:
+# Run BUILD from README.md immediately before this block, not TEST: TEST re-signs the
+# app with temporary test-host exceptions (e.g. read access to /), which would be checked instead.
+# BUILD, then:
 APP=$(xcodebuild -project MinimaList.xcodeproj -scheme MinimaList -showBuildSettings 2>/dev/null \
   | awk -F' = ' '/ BUILT_PRODUCTS_DIR = /{d=$2} / FULL_PRODUCT_NAME = /{n=$2} END{print d"/"n}')
 ENT=$(codesign -d --entitlements - --xml "$APP" 2>/dev/null | plutil -convert xml1 -o - -)
 echo "$ENT" | grep -A1 'com.apple.security.app-sandbox' | grep -q '<true/>' || echo "FAIL: not sandboxed"
-echo "$ENT" | grep -E 'com\.apple\.security\.(network|files)\.' && echo "FAIL: extra entitlements"
+echo "$ENT" | grep -E 'com\.apple\.security\.((network|files)\.|temporary-exception)' && echo "FAIL: extra entitlements"
 test -e "$APP/Contents/Resources/MinimaList.entitlements" && echo "FAIL: entitlements copied into bundle"
 ```
 
