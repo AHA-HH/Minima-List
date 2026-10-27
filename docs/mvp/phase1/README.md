@@ -47,11 +47,11 @@ Automated (`TEST`): every unit test listed in the briefs passes.
 
 Manual (owner, once T6 is merged):
 
-- [ ] Launches as a floating 380 × 610 pt widget with rounded corners and no title bar or traffic lights.
-- [ ] Can be dragged by its background.
-- [ ] Stays visible when switching Spaces and over a full-screen app.
-- [ ] Typing a task and pressing Return adds it at the top; empty or spaces-only input adds nothing.
-- [ ] Clicking a row's circle completes it, and clicking again reopens it; the progress bar and "n of m done" update immediately.
-- [ ] Hovering a row shows its delete button, and clicking it removes the task.
-- [ ] Quitting and relaunching keeps every task, with its completion state.
-- [ ] With no tasks, the empty state shows.
+- [x] Launches as a floating 380 × 610 pt widget with rounded corners and no title bar or traffic lights.
+- [x] Can be dragged by its background.
+- [x] Stays visible when switching Spaces and over a full-screen app.
+- [x] Typing a task and pressing Return adds it at the top; empty or spaces-only input adds nothing.
+- [x] Clicking a row's circle completes it, and clicking again reopens it; the progress bar and "n of m done" update immediately.
+- [x] Hovering a row shows its delete button, and clicking it removes the task.
+- [x] Quitting and relaunching keeps every task, with its completion state.
+- [x] With no tasks, the empty state shows.
