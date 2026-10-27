@@ -33,7 +33,7 @@ Zed's Swift support comes from `sourcekit-lsp`. On its own it understands Swift 
 
    ```md
    ## Editor
-   Zed + `sourcekit-lsp` via `xcode-build-server`. Per machine: `brew install xcode-build-server`,
+   Zed + `sourcekit-lsp` via `xcode-build-server`. Per checkout (each clone or worktree): `brew install xcode-build-server`,
    then `xcode-build-server config -project MinimaList.xcodeproj -scheme MinimaList` and run BUILD once.
    ```
 

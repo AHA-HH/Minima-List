@@ -16,7 +16,7 @@ Run them in this order. T3 comes first so that Xcode's per-user files never get 
 | 4 | P0-T4 | [Local-only sandbox](T4-sandbox.md) | P0-T1 |
 | 5 | P0-T5 | [Zed editor setup](T5-zed-editor.md) | P0-T1, P0-T3 |
 
-- [x] P0-T3 · [x] P0-T1 · [x] P0-T2 · [x] P0-T4 · [ ] P0-T5
+- [x] P0-T3 · [x] P0-T1 · [x] P0-T2 · [x] P0-T4 · [x] P0-T5
 
 **Editing workflow:** no step needs the Xcode GUI. P0-T1 writes the project file as text. All editing happens in Zed (set up in P0-T5), and builds and tests run through `xcodebuild`.
 

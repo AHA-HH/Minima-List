@@ -34,3 +34,8 @@ Run the Must pass block in [docs/mvp/phase0/T4-sandbox.md](docs/mvp/phase0/T4-sa
 - Write unit tests with Swift Testing (`import Testing`).
 - `TaskStore` is the only owner of task data (design §10).
 - Changing a rule in this file needs the owner's sign-off.
+
+## Editor
+
+Zed + `sourcekit-lsp` via `xcode-build-server`. Per checkout (each clone or worktree): `brew install xcode-build-server`,
+then `xcode-build-server config -project MinimaList.xcodeproj -scheme MinimaList` and run BUILD once.

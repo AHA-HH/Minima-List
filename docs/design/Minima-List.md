@@ -383,7 +383,7 @@ P0 Scaffold ──► P1 Core loop ──► P2 Daily usability ──► P3 Pol
 - [x] **P0-T2** Set the source layout (`Model/`, `Views/`, `Platform/`) and write `CLAUDE.md` with the build/test commands and repo rules.
 - [x] **P0-T3** Add an Xcode `.gitignore` covering `xcuserdata/`, `DerivedData/`, and `.DS_Store`.
 - [x] **P0-T4** Keep App Sandbox enabled with no network entitlement, so the app stays local-only.
-- [ ] **P0-T5** Set up Zed for day-to-day editing (`sourcekit-lsp` via `xcode-build-server`). No step needs the Xcode GUI; P0-T1 writes the project file as text.
+- [x] **P0-T5** Set up Zed for day-to-day editing (`sourcekit-lsp` via `xcode-build-server`). No step needs the Xcode GUI; P0-T1 writes the project file as text.
 
 **Exit criteria:** `xcodebuild build` and `xcodebuild test` succeed from the command line; the app launches to a blank window.
 
