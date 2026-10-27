@@ -389,15 +389,15 @@ P0 Scaffold ──► P1 Core loop ──► P2 Daily usability ──► P3 Pol
 
 ### Phase 1 — Core loop
 
-**Goal:** in the floating widget shell, tasks can be added, completed, and deleted, and they survive a relaunch.
+**Goal:** in the floating widget shell, tasks can be added, completed, and deleted, and they survive a relaunch. Task briefs: [`docs/mvp/phase1/`](../mvp/phase1/README.md).
 
 | ID | Task | File(s) | Depends on |
 | --- | --- | --- | --- |
 | P1-T1 | `TaskItem` model and `Category` enum, where `Category` owns its label, color, and SF Symbol | `Model/TaskItem.swift` | P0 |
 | P1-T2 | `TaskStore` (`@Observable`): `tasks`, `completedCount`, `progress`, `add`, `toggle`, `remove`, `clearCompleted`; JSON persistence to an injected `UserDefaults`; decode failure → empty list | `Model/TaskStore.swift` | P1-T1 |
 | P1-T3 | `WindowConfigurator`: transparent background, movable by background, `.floating` level, `[.canJoinAllSpaces, .fullScreenAuxiliary]`, hidden traffic lights | `Platform/WindowConfigurator.swift` | P0 |
-| P1-T4 | `ContentView` shell: header, scrolling list, and composer per the wireframe; 380 × 610 pt, 22 pt radius, color tokens | `Views/ContentView.swift` | P1-T2 |
-| P1-T5 | `TaskRow`: toggle circle, two-line title, delete button on hover | `Views/TaskRow.swift` | P1-T2 |
+| P1-T4 | `ContentView` shell: header, scrolling list, and composer per the wireframe; 380 × 610 pt, 22 pt radius, color tokens; app owns the store | `Views/ContentView.swift`, `Views/Theme.swift`, `Views/Greeting.swift`, `MinimaListApp.swift` | P1-T2, P1-T3, P1-T5 |
+| P1-T5 | `TaskRow`: toggle circle, two-line title, delete button on hover | `Views/TaskRow.swift` | P1-T1 |
 | P1-T6 | Empty state | `Views/ContentView.swift` | P1-T4 |
 
 - [ ] P1-T1 · [ ] P1-T2 · [ ] P1-T3 · [ ] P1-T4 · [ ] P1-T5 · [ ] P1-T6
