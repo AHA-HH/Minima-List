@@ -9,9 +9,14 @@ struct ContentView: View {
     var body: some View {
         VStack(spacing: 0) {
             header
-            list
+            if store.tasks.isEmpty {
+                emptyState
+            } else {
+                list
+            }
             composer
         }
+        .defaultFocus($isInputFocused, true)
         .fontDesign(.rounded)
         .frame(width: 380, height: 610)
         .background(Color.widgetBackground)
@@ -24,12 +29,17 @@ struct ContentView: View {
                 .font(.caption.bold())
                 .tracking(1.5)
                 .foregroundStyle(Color.textSecondary)
-            Text(greeting(for: .now))
-                .font(.largeTitle.weight(.semibold))
-                .foregroundStyle(Color.textPrimary)
-            Text(Date.now, format: .dateTime.weekday(.wide).day().month(.wide))
-                .font(.subheadline)
-                .foregroundStyle(Color.textSecondary)
+            // Only the greeting and date tick, so a widget left open overnight stays current.
+            TimelineView(.everyMinute) { context in
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(greeting(for: context.date))
+                        .font(.largeTitle.weight(.semibold))
+                        .foregroundStyle(Color.textPrimary)
+                    Text(context.date, format: .dateTime.weekday(.wide).day().month(.wide))
+                        .font(.subheadline)
+                        .foregroundStyle(Color.textSecondary)
+                }
+            }
             HStack(spacing: 10) {
                 ProgressView(value: store.progress)
                     .tint(Color.accentCoral)
@@ -60,6 +70,21 @@ struct ContentView: View {
             .padding(.vertical, 4)
         }
         .frame(maxHeight: .infinity)
+    }
+
+    private var emptyState: some View {
+        VStack(spacing: 8) {
+            Image(systemName: "circle")
+                .font(.system(size: 40, weight: .light))
+                .foregroundStyle(Color.textSecondary)
+                .padding(.bottom, 4)
+            Text("Nothing here yet.")
+                .foregroundStyle(Color.textPrimary)
+            Text("What's one thing to do?")
+                .foregroundStyle(Color.textSecondary)
+        }
+        .accessibilityElement(children: .combine)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private var composer: some View {
