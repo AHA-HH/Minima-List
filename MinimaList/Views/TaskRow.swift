@@ -57,7 +57,7 @@ struct TaskRow: View {
             .accessibilityHidden(false)
         }
         .padding(12)
-        .background(.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .background(Color.surfaceRaised, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
         .onHover { isHovered = $0 }
     }
 }

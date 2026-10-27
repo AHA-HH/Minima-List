@@ -14,10 +14,13 @@ enum WindowConfigurator {
         window.titlebarAppearsTransparent = true
         window.titleVisibility = .hidden
         window.styleMask.insert(.fullSizeContentView)
+        // No minimize button is shown, so a title-bar double-click (under the "Minimize" setting) must not send the widget to the Dock.
+        window.styleMask.remove(.miniaturizable)
         for button in [NSWindow.ButtonType.closeButton, .miniaturizeButton, .zoomButton] {
             window.standardWindowButton(button)?.isHidden = true
         }
-        // The hidden title bar still gives the content view a top safe-area inset (32 pt), and SwiftUI grows a
+        // The hidden title bar still gives the content view a top safe-area inset (its height, computed here at runtime;
+        // 32 pt on the dev machine), and SwiftUI grows a
         // .contentSize window by it, leaving an invisible strip above the widget. Cancel it so the window is the content's size.
         let titlebarHeight = window.frame.height - window.contentLayoutRect.height
         window.contentView?.additionalSafeAreaInsets = NSEdgeInsets(top: -titlebarHeight, left: 0, bottom: 0, right: 0)

@@ -25,6 +25,7 @@ struct WindowConfiguratorTests {
         #expect(window.titleVisibility == .hidden)
         #expect(window.styleMask.contains(.fullSizeContentView))
         #expect(window.styleMask.contains(.titled))
+        #expect(!window.styleMask.contains(.miniaturizable))
         for button in [NSWindow.ButtonType.closeButton, .miniaturizeButton, .zoomButton] {
             #expect(window.standardWindowButton(button)?.isHidden == true)
         }
