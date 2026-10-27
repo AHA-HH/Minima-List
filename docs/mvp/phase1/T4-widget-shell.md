@@ -33,7 +33,8 @@ Replace the template "Hello, world!" view with the real widget: a header with gr
    - **Composer:** a `TextField("Add a task…")` on a `surfaceRaised` background, plus a `+` button. Return and `+` both call `store.add(title: text, category: .focus)`, clear the text, and keep focus in the field for the next task. Under it, the hint `Return to add`.
    - **Frame:** `.frame(width: 380, height: 610)`, `Color.widgetBackground` background, clipped to a 22 pt continuous rounded rectangle. Rounded system font design throughout.
    - `#Preview`: a store on a throwaway `UserDefaults(suiteName:)` with a few sample tasks.
-5. **Template test.** Update `MinimaListTests.swift` so it builds `ContentView(store:)` with an isolated-defaults store.
+5. **No invisible strip above the widget.** A titled SwiftUI window reserves about 32 pt above the content for its (hidden) title bar, so a 380 × 610 frame gives a 380 × 642 window. The strip is invisible on a clear background but still catches clicks and drags. The P1-T3 review found that `.ignoresSafeArea()` on `ContentView` and `.windowStyle(.hiddenTitleBar)` on their own don't remove it. Make the **window** exactly 380 × 610. Keep any fix inside `MinimaListApp.swift` or `Platform/WindowConfigurator.swift` (and extend its unit test if you change `configure`). Don't switch to `.borderless` or `NSPanel`. If it can't be done on macOS 14, stop and report what you tried.
+6. **Template test.** Update `MinimaListTests.swift` so it builds `ContentView(store:)` with an isolated-defaults store.
 
 ## Tests that define done
 
@@ -42,11 +43,12 @@ Replace the template "Hello, world!" view with the real widget: a header with gr
   - 12:00 and 17:59 → afternoon
   - 18:00, 23:59, 00:00 and 04:59 → evening
 - The updated smoke test constructs `ContentView(store:)` and passes.
+- **Measured window size.** Launch the built app and read its window bounds with `CGWindowListCopyWindowInfo`: the on-screen MinimaList window is `380 × 610` and its layer is still `3`. Record the numbers in the PR. Quit the app afterwards.
 - Every P1-T1, P1-T2, P1-T3 and P1-T5 test still passes.
 
 Manual checks (owner; record results in the review):
 
-- The widget is 380 × 610 pt with rounded corners and no square corners showing (the window is transparent).
+- The widget is 380 × 610 pt with rounded corners and no square corners showing, and clicking just above its top edge reaches the app behind it (no invisible strip).
 - Typing "reply to email" and pressing Return adds it at the top and leaves the cursor in the field. Typing only spaces and pressing Return adds nothing.
 - Toggling a row updates the progress bar and the "n of m done" text immediately.
 - With enough tasks to overflow, only the list scrolls.
