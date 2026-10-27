@@ -20,8 +20,7 @@ struct TaskRow: View {
             Button(action: onToggle) {
                 Image(systemName: task.isComplete ? "checkmark.circle.fill" : "circle")
                     .font(.title3)
-                    // The coral accent token arrives with P1-T4; Focus is the same coral.
-                    .foregroundStyle(task.isComplete ? TaskCategory.focus.color : .white.opacity(0.55))
+                    .foregroundStyle(task.isComplete ? Color.accentCoral : Color.textSecondary)
             }
             .buttonStyle(.plain)
             .accessibilityLabel(Self.toggleLabel(for: task))
@@ -31,7 +30,7 @@ struct TaskRow: View {
                     .font(.system(.body, design: .rounded, weight: .medium))
                     .lineLimit(2)
                     .strikethrough(task.isComplete)
-                    .foregroundStyle(.white.opacity(task.isComplete ? 0.45 : 0.92))
+                    .foregroundStyle(task.isComplete ? Color.white.opacity(0.45) : Color.textPrimary)
 
                 HStack(spacing: 5) {
                     Circle()
@@ -40,7 +39,7 @@ struct TaskRow: View {
                         .accessibilityHidden(true)
                     Text(task.category.label)
                         .font(.system(.caption, design: .rounded))
-                        .foregroundStyle(.white.opacity(0.55))
+                        .foregroundStyle(Color.textSecondary)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -50,7 +49,7 @@ struct TaskRow: View {
             Button(action: onDelete) {
                 Image(systemName: "xmark")
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(.white.opacity(0.55))
+                    .foregroundStyle(Color.textSecondary)
             }
             .buttonStyle(.plain)
             .opacity(isHovered ? 1 : 0)
@@ -58,7 +57,7 @@ struct TaskRow: View {
             .accessibilityHidden(false)
         }
         .padding(12)
-        .background(.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .background(Color.surfaceRaised, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
         .onHover { isHovered = $0 }
     }
 }
