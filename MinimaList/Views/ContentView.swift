@@ -129,7 +129,7 @@ struct ContentView: View {
     let store = TaskStore(defaults: UserDefaults(suiteName: "preview-\(UUID())")!)
     store.add(title: "Buy oat milk", category: .life)
     store.add(title: "Book dentist appointment for the week after next", category: .later)
-    store.add(title: "Reply to that email", category: TaskCategory.focus)
+    store.add(title: "Reply to that email", category: .focus)
     store.toggle(store.tasks[2].id)
     return ContentView(store: store)
 }

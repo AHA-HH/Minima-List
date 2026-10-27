@@ -41,7 +41,8 @@ Manual checks (owner):
 
 ```sh
 # BUILD and TEST from CLAUDE.md, then:
-grep -n 'category: \.focus' MinimaList/Views/ContentView.swift && echo "FAIL: composer still hard-codes Focus"
+grep -nE 'store\.add\(title: text, category: (TaskCategory)?\.focus' MinimaList/Views/ContentView.swift && echo "FAIL: composer still hard-codes Focus"
+grep -qF 'store.add(title: text, category: category)' MinimaList/Views/ContentView.swift || echo "FAIL: addTask does not pass the selected category"
 grep -q 'CategorySelector(selection:' MinimaList/Views/ContentView.swift || echo "FAIL: selector not in the composer"
 grep -n 'TaskStore\|UserDefaults' MinimaList/Views/CategorySelector.swift && echo "FAIL: selector must not touch data"
 ```
