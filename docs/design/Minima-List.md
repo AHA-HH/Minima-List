@@ -400,7 +400,7 @@ P0 Scaffold ──► P1 Core loop ──► P2 Daily usability ──► P3 Pol
 | P1-T5 | `TaskRow`: toggle circle, two-line title, delete button on hover | `Views/TaskRow.swift` | P1-T1 |
 | P1-T6 | Empty state | `Views/ContentView.swift` | P1-T4 |
 
-- [ ] P1-T1 · [ ] P1-T2 · [ ] P1-T3 · [ ] P1-T4 · [ ] P1-T5 · [ ] P1-T6
+- [x] P1-T1 · [x] P1-T2 · [x] P1-T3 · [x] P1-T4 · [x] P1-T5 · [x] P1-T6
 
 **Unit tests (`TaskStoreTests`):**
 

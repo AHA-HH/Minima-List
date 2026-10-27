@@ -17,7 +17,7 @@ Tasks in the same wave touch different files and can run in parallel.
 | 3 | P1-T4 | [Widget shell](T4-widget-shell.md) | P1-T2, P1-T3, P1-T5 |
 | 4 | P1-T6 | [Empty state](T6-empty-state.md) | P1-T4 |
 
-- [ ] P1-T1 · [ ] P1-T3 · [ ] P1-T2 · [ ] P1-T5 · [ ] P1-T4 · [ ] P1-T6
+- [x] P1-T1 · [x] P1-T3 · [x] P1-T2 · [x] P1-T5 · [x] P1-T4 · [x] P1-T6
 
 Tick an item only after both reviews pass (the thermo-nuclear code quality review and the `reviewer` agent) and the PR is merged.
 
