@@ -37,5 +37,5 @@ Run the Must pass block in [docs/mvp/phase0/T4-sandbox.md](docs/mvp/phase0/T4-sa
 
 ## Editor
 
-Zed + `sourcekit-lsp` via `xcode-build-server`. Per machine: `brew install xcode-build-server`,
+Zed + `sourcekit-lsp` via `xcode-build-server`. Per checkout (each clone or worktree): `brew install xcode-build-server`,
 then `xcode-build-server config -project MinimaList.xcodeproj -scheme MinimaList` and run BUILD once.
