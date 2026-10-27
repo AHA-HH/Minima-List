@@ -18,7 +18,7 @@ Run them in this order. T3 comes first so that Xcode's per-user files never get 
 
 - [ ] P0-T3 · [ ] P0-T1 · [ ] P0-T2 · [ ] P0-T4 · [ ] P0-T5
 
-**Editing workflow:** Xcode's GUI is used once, for the New Project wizard in P0-T1. All editing after that happens in Zed (set up in P0-T5), with builds and tests run through `xcodebuild`.
+**Editing workflow:** no step needs the Xcode GUI. P0-T1 writes the project file as text. All editing happens in Zed (set up in P0-T5), and builds and tests run through `xcodebuild`.
 
 Tick an item only after the `reviewer` agent returns `PASS` for that task.
 
