@@ -14,8 +14,11 @@ Run them in this order. T3 comes first so that Xcode's per-user files never get 
 | 2 | P0-T1 | [Create the Xcode project](T1-xcode-project.md) | P0-T3 |
 | 3 | P0-T2 | [Source layout and `CLAUDE.md`](T2-layout-and-conventions.md) | P0-T1 |
 | 4 | P0-T4 | [Local-only sandbox](T4-sandbox.md) | P0-T1 |
+| 5 | P0-T5 | [Zed editor setup](T5-zed-editor.md) | P0-T1, P0-T3 |
 
-- [ ] P0-T3 · [ ] P0-T1 · [ ] P0-T2 · [ ] P0-T4
+- [ ] P0-T3 · [ ] P0-T1 · [ ] P0-T2 · [ ] P0-T4 · [ ] P0-T5
+
+**Editing workflow:** Xcode's GUI is used once, for the New Project wizard in P0-T1. All editing after that happens in Zed (set up in P0-T5), with builds and tests run through `xcodebuild`.
 
 Tick an item only after the `reviewer` agent returns `PASS` for that task.
 
@@ -36,7 +39,7 @@ xcodebuild -project MinimaList.xcodeproj -scheme MinimaList -destination 'platfo
 The reviewer flags any of these as a scope violation:
 
 - Any app code beyond the Xcode template: no `TaskItem`, `TaskStore`, window configuration or styling. That work starts in Phase 1.
-- Third-party dependencies (Swift packages, CocoaPods, XcodeGen, Tuist).
+- Third-party project dependencies (Swift packages, CocoaPods, XcodeGen, Tuist). `xcode-build-server` (P0-T5) is allowed because it's a tool installed on each developer's machine; the project never links or needs it.
 - CI configuration.
 - Edits to the design document other than ticking §15 checkboxes.
 - A UI test target.
@@ -47,3 +50,4 @@ The reviewer flags any of these as a scope violation:
 - [ ] Launching the app opens a single window showing the template content.
 - [ ] `CLAUDE.md` exists and lists `BUILD` and `TEST` as the repository's full checks.
 - [ ] The built app is sandboxed and has no network entitlements.
+- [ ] Zed shows autocomplete and inline compiler errors for project sources.
