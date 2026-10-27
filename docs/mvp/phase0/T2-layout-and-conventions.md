@@ -20,7 +20,7 @@ Fix the source layout that Phase 1 files go into, and write the conventions file
 3. Create `CLAUDE.md` with these sections:
    - **Project:** one line describing a minimal, local-only floating task widget for macOS, built with SwiftUI and AppKit interop, plus a link to `docs/design/Minima-List.md`, and a link to `docs/mvp/` as the place for phase plans and task briefs.
    - **Layout:**
-     - `MinimaList/Model/`: data and persistence. No `import SwiftUI`; the one exception is `import struct SwiftUI.Color`, so `Category` can own its color (design §10).
+     - `MinimaList/Model/`: data and persistence. No `import SwiftUI`; the one exception is `import struct SwiftUI.Color`, so `TaskCategory` can own its color (design §10).
      - `MinimaList/Views/`: SwiftUI views.
      - `MinimaList/Platform/`: AppKit interop.
      - `MinimaListTests/`: unit tests.

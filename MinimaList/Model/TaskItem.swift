@@ -4,11 +4,11 @@ import struct SwiftUI.Color
 struct TaskItem: Identifiable, Codable, Equatable {
     let id: UUID
     var title: String
-    var category: Category
+    var category: TaskCategory
     var isComplete: Bool
     var createdAt: Date
 
-    init(id: UUID = UUID(), title: String, category: Category, isComplete: Bool = false, createdAt: Date = .now) {
+    init(id: UUID = UUID(), title: String, category: TaskCategory, isComplete: Bool = false, createdAt: Date = .now) {
         self.id = id
         self.title = title
         self.category = category
@@ -18,7 +18,7 @@ struct TaskItem: Identifiable, Codable, Equatable {
 }
 
 /// Raw values are persisted; never rename them.
-enum Category: String, Codable, CaseIterable {
+enum TaskCategory: String, Codable, CaseIterable {
     case focus, life, later
 
     var label: String {

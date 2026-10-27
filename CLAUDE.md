@@ -6,7 +6,7 @@ Minima-List is a minimal, local-only floating task widget for macOS, built with 
 
 ## Layout
 
-- `MinimaList/Model/`: data and persistence. No `import SwiftUI`; the one exception is `import struct SwiftUI.Color`, so `Category` can own its color (design §10).
+- `MinimaList/Model/`: data and persistence. No `import SwiftUI`; the one exception is `import struct SwiftUI.Color`, so `TaskCategory` can own its color (design §10).
 - `MinimaList/Views/`: SwiftUI views.
 - `MinimaList/Platform/`: AppKit interop.
 - `MinimaListTests/`: unit tests.

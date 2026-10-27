@@ -51,4 +51,4 @@ The block prints nothing when the task passes.
 
 - Reference `TaskStore`, `UserDefaults` or any persistence from the row.
 - Add a context menu, swipe actions, inline editing or animations (Phase 2).
-- Define new color tokens here. Use `Category.color` and plain `.white.opacity(...)`; the shared tokens arrive with P1-T4.
+- Define new color tokens here. Use `TaskCategory.color` and plain `.white.opacity(...)`; the shared tokens arrive with P1-T4.

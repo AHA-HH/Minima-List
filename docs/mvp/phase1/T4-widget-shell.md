@@ -25,7 +25,7 @@ Replace the template "Hello, world!" view with the real widget: a header with gr
    - `surfaceRaised`: `.white.opacity(0.06)`
    - `textPrimary`: `.white.opacity(0.92)`
    - `textSecondary`: `.white.opacity(0.55)`
-   - `accentCoral`: reuse `Category.focus.color`, so coral is defined once
+   - `accentCoral`: reuse `TaskCategory.focus.color`, so coral is defined once
 3. **Greeting.** In `Greeting.swift`, write `func greeting(for date: Date, calendar: Calendar = .current) -> String` returning `"Good morning"` for hours 5–11, `"Good afternoon"` for 12–17, and `"Good evening"` otherwise.
 4. **`ContentView(store: TaskStore)`.** It owns only transient UI state (design §10): `@State` composer text and `@FocusState` input focus.
    - **Header:** `MINIMA LIST` (small, bold, tracked, uppercase; the one place the name appears), `greeting(for: .now)` (large semibold), today's date (`.dateTime.weekday(.wide).day().month(.wide)`), and a coral progress bar of `store.progress` with `"\(store.completedCount) of \(store.tasks.count) done"`.

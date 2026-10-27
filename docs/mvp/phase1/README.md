@@ -10,7 +10,7 @@ Tasks in the same wave touch different files and can run in parallel.
 
 | Wave | ID | Brief | Depends on |
 | --- | --- | --- | --- |
-| 1 | P1-T1 | [`TaskItem` and `Category`](T1-task-model.md) | P0 |
+| 1 | P1-T1 | [`TaskItem` and `TaskCategory`](T1-task-model.md) | P0 |
 | 1 | P1-T3 | [Floating window](T3-floating-window.md) | P0 |
 | 2 | P1-T2 | [`TaskStore` and persistence](T2-task-store.md) | P1-T1 |
 | 2 | P1-T5 | [`TaskRow`](T5-task-row.md) | P1-T1 |
@@ -35,7 +35,7 @@ Tick an item only after both reviews pass (the thermo-nuclear code quality revie
 
 These belong to Phase 2 or later. The reviewer flags them as scope violations:
 
-- Category selector in the composer (new tasks use `Category.focus`).
+- Category selector in the composer (new tasks use `TaskCategory.focus`).
 - Overflow menu (`•••`), Hide/Show completed, Clear completed in the UI (`TaskStore.clearCompleted()` is built and tested, but nothing calls it yet), row context menus.
 - `⌘N`, hover/completion/removal animations, Reduce Motion handling.
 - Undo, window-position persistence, data versioning or migration.
