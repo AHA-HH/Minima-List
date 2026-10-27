@@ -14,6 +14,7 @@ Replace the template "Hello, world!" view with the real widget: a header with gr
 - `MinimaList/Views/Theme.swift` (new: the non-category color tokens)
 - `MinimaList/Views/Greeting.swift` (new: time-of-day greeting)
 - `MinimaList/MinimaListApp.swift` (own the store, fix the window size)
+- `MinimaList/Views/TaskRow.swift` (swap its stand-in coral for `Color.accentCoral`; nothing else)
 - `MinimaListTests/GreetingTests.swift` (new)
 - `MinimaListTests/MinimaListTests.swift` (update the template smoke test for the new `ContentView` init)
 
@@ -26,6 +27,8 @@ Replace the template "Hello, world!" view with the real widget: a header with gr
    - `textPrimary`: `.white.opacity(0.92)`
    - `textSecondary`: `.white.opacity(0.55)`
    - `accentCoral`: reuse `TaskCategory.focus.color`, so coral is defined once
+
+   Then in `TaskRow.swift`, replace the stand-in `TaskCategory.focus.color` used for the completed circle with `Color.accentCoral`, and its plain `.white.opacity(0.92)` / `.white.opacity(0.55)` with `Color.textPrimary` / `Color.textSecondary`. Change nothing else in the row.
 3. **Greeting.** In `Greeting.swift`, write `func greeting(for date: Date, calendar: Calendar = .current) -> String` returning `"Good morning"` for hours 5–11, `"Good afternoon"` for 12–17, and `"Good evening"` otherwise.
 4. **`ContentView(store: TaskStore)`.** It owns only transient UI state (design §10): `@State` composer text and `@FocusState` input focus.
    - **Header:** `MINIMA LIST` (small, bold, tracked, uppercase; the one place the name appears), `greeting(for: .now)` (large semibold), today's date (`.dateTime.weekday(.wide).day().month(.wide)`), and a coral progress bar of `store.progress` with `"\(store.completedCount) of \(store.tasks.count) done"`.
