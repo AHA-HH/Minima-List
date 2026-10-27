@@ -2,14 +2,15 @@
 
 ## Project
 
-Minima-List is a minimal, local-only macOS task widget built with SwiftUI. The design is in [docs/design/Minima-List.md](docs/design/Minima-List.md); phase plans and task briefs are in [docs/mvp/](docs/mvp/).
+Minima-List is a minimal, local-only floating task widget for macOS, built with SwiftUI and AppKit interop. The design is in [docs/design/Minima-List.md](docs/design/Minima-List.md); phase plans and task briefs are in [docs/mvp/](docs/mvp/).
 
 ## Layout
 
-- `MinimaList/Model/`: data and persistence. No SwiftUI imports.
+- `MinimaList/Model/`: data and persistence. No `import SwiftUI`; the one exception is `import struct SwiftUI.Color`, so `Category` can own its color (design §10).
 - `MinimaList/Views/`: SwiftUI views.
 - `MinimaList/Platform/`: AppKit interop.
 - `MinimaListTests/`: unit tests.
+- `MinimaList/` (root): only `MinimaListApp.swift` (the `@main` entry point) and `MinimaList.entitlements`.
 
 ## Checks
 
@@ -23,7 +24,7 @@ xcodebuild -project MinimaList.xcodeproj -scheme MinimaList -destination "platfo
 xcodebuild -project MinimaList.xcodeproj -scheme MinimaList -destination "platform=macOS,arch=$(uname -m)" test
 ```
 
-Run the sandbox entitlement check in [docs/mvp/phase0/T4-sandbox.md](docs/mvp/phase0/T4-sandbox.md) (Must pass) right after BUILD, never after TEST, because TEST re-signs the app with test-host exceptions.
+Run the Must pass block in [docs/mvp/phase0/T4-sandbox.md](docs/mvp/phase0/T4-sandbox.md) right after BUILD, never after TEST, because TEST re-signs the app with test-host exceptions.
 
 ## Rules
 
