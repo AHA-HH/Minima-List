@@ -1,0 +1,7 @@
+.DS_Store
+xcuserdata/
+DerivedData/
+build/
+*.xcuserstate
+# xcode-build-server config (P0-T5) holds absolute paths for one machine
+buildServer.json
