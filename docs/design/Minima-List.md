@@ -417,11 +417,11 @@ P0 Scaffold ──► P1 Core loop ──► P2 Daily usability ──► P3 Pol
 
 **Goal:** close the remaining §14 criteria. This completes the MVP. Task briefs: [`docs/mvp/phase2/`](../mvp/phase2/README.md).
 
-- [ ] **P2-T1** Category selector in the composer (default: Focus). Rows show the category as text plus color, never color alone.
-- [ ] **P2-T2** Overflow menu: Hide/Show completed, Clear completed, Quit.
-- [ ] **P2-T3** Row context menu: Mark complete/Reopen, Delete.
-- [ ] **P2-T4** `⌘N` command that focuses the composer (`.commands` + `@FocusState`). It replaces `WindowGroup`'s New Window command, which otherwise opens a second widget on `⌘N`.
-- [ ] **P2-T5** Motion: spring on toggle, fade on hover delete, ease-out on removal. With Reduce Motion enabled, motion is shortened or removed.
+- [x] **P2-T1** Category selector in the composer (default: Focus). Rows show the category as text plus color, never color alone.
+- [x] **P2-T2** Overflow menu: Hide/Show completed, Clear completed, Quit.
+- [x] **P2-T3** Row context menu: Mark complete/Reopen, Delete.
+- [x] **P2-T4** `⌘N` command that focuses the composer (`.commands` + `@FocusState`). It replaces `WindowGroup`'s New Window command, which otherwise opens a second widget on `⌘N`.
+- [x] **P2-T5** Motion: spring on toggle, fade on hover delete, ease-out on removal. With Reduce Motion enabled, motion is shortened or removed.
 - [ ] **P2-T6** Accessibility pass against §12: labels on every control, a keyboard-only walkthrough, and a VoiceOver walkthrough.
 
 **Unit tests:** `clearCompleted` removes only completed tasks. With completed tasks hidden, the visible list is empty when every task is complete, which triggers the empty state.
