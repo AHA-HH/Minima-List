@@ -6,6 +6,7 @@ struct TaskRow: View {
     let onDelete: () -> Void
 
     @State private var isHovered = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     static func toggleLabel(for task: TaskItem) -> String {
         "Mark \(task.title) \(task.isComplete ? "incomplete" : "complete")"
@@ -24,7 +25,9 @@ struct TaskRow: View {
             Button(action: onToggle) {
                 Image(systemName: task.isComplete ? "checkmark.circle.fill" : "circle")
                     .font(.title3)
+                    .contentTransition(.symbolEffect(.replace))
                     .foregroundStyle(task.isComplete ? Color.accentCoral : Color.textSecondary)
+                    .animation(Motion.toggle(reduceMotion: reduceMotion), value: task.isComplete)
             }
             .buttonStyle(.plain)
             .accessibilityLabel(Self.toggleLabel(for: task))
@@ -35,6 +38,7 @@ struct TaskRow: View {
                     .lineLimit(2)
                     .strikethrough(task.isComplete)
                     .foregroundStyle(task.isComplete ? Color.white.opacity(0.45) : Color.textPrimary)
+                    .animation(Motion.toggle(reduceMotion: reduceMotion), value: task.isComplete)
 
                 HStack(spacing: 5) {
                     Circle()
@@ -57,6 +61,7 @@ struct TaskRow: View {
             }
             .buttonStyle(.plain)
             .opacity(isHovered ? 1 : 0)
+            .animation(Motion.hover(reduceMotion: reduceMotion), value: isHovered)
             .accessibilityLabel(Self.deleteLabel(for: task))
             .accessibilityHidden(false)
         }

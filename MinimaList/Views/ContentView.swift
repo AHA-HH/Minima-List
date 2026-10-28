@@ -7,6 +7,7 @@ struct ContentView: View {
     @State private var category: TaskCategory = .focus
     @State private var isHidingCompleted = false
     @FocusState private var isInputFocused: Bool
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     static func visibleTasks(_ tasks: [TaskItem], hidingCompleted: Bool) -> [TaskItem] {
         hidingCompleted ? tasks.filter { !$0.isComplete } : tasks
@@ -16,11 +17,19 @@ struct ContentView: View {
         let visibleTasks = Self.visibleTasks(store.tasks, hidingCompleted: isHidingCompleted)
         VStack(spacing: 0) {
             header
-            if visibleTasks.isEmpty {
-                emptyState
-            } else {
-                list(visibleTasks)
+            // A ZStack so the empty state and list crossfade in one frame instead of splitting the height.
+            ZStack {
+                if visibleTasks.isEmpty {
+                    emptyState
+                        .transition(.opacity)
+                } else {
+                    list(visibleTasks)
+                        .transition(.opacity)
+                }
             }
+            .frame(maxHeight: .infinity)
+            // Keyed on the visible rows, so every path that adds or removes one animates, toggling while hidden included.
+            .animation(Motion.removal(reduceMotion: reduceMotion), value: visibleTasks.map(\.id))
             composer
         }
         .defaultFocus($isInputFocused, true)
@@ -95,6 +104,7 @@ struct ContentView: View {
                         onToggle: { store.toggle(task.id) },
                         onDelete: { store.remove(task.id) }
                     )
+                    .transition(Motion.rowTransition(reduceMotion: reduceMotion))
                 }
             }
             .padding(.horizontal, 16)
