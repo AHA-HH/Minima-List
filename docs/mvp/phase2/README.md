@@ -54,10 +54,10 @@ Automated (`TEST`): every unit test listed in the briefs passes, including the v
 
 Manual (owner, once T6 is merged):
 
-- [ ] A category can be chosen before adding a task, and the new row shows that category's name and color.
-- [ ] Hide completed hides every completed row, and Show completed brings them back. With every task complete and completed hidden, the empty state shows.
-- [ ] Clear completed removes only completed tasks.
-- [ ] Right-clicking a row offers Mark complete (or Reopen) and Delete, and both work.
-- [ ] `⌘N` focuses the composer and never opens a second widget window.
-- [ ] Completing, hovering and deleting animate gently. With Reduce Motion on, the spring and slide are gone.
-- [ ] The core flow (add with a category, complete, delete, hide completed) works using only the keyboard, and with VoiceOver every control is announced with a meaningful name.
+- [x] A category can be chosen before adding a task, and the new row shows that category's name and color.
+- [x] Hide completed hides every completed row, and Show completed brings them back. With every task complete and completed hidden, the empty state shows.
+- [x] Clear completed removes only completed tasks.
+- [x] Right-clicking a row offers Mark complete (or Reopen) and Delete, and both work.
+- [x] `⌘N` focuses the composer and never opens a second widget window.
+- [x] Completing, hovering and deleting animate gently. With Reduce Motion on, the spring and slide are gone.
+- [x] The core flow (add with a category, complete, delete, hide completed) works using only the keyboard, and with VoiceOver every control is announced with a meaningful name.
