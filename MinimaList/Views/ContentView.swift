@@ -24,6 +24,7 @@ struct ContentView: View {
             composer
         }
         .defaultFocus($isInputFocused, true)
+        .focusedSceneValue(\.focusComposer) { isInputFocused = true }
         .fontDesign(.rounded)
         .frame(width: 380, height: 610)
         .background(Color.widgetBackground)
@@ -138,7 +139,7 @@ struct ContentView: View {
                 .accessibilityLabel("Add task")
             }
             CategorySelector(selection: $category)
-            Text("Return to add")
+            Text("Return to add · ⌘N to focus")
                 .font(.caption)
                 .foregroundStyle(Color.textSecondary)
         }
@@ -151,6 +152,18 @@ struct ContentView: View {
         store.add(title: text, category: category)
         text = ""
         isInputFocused = true
+    }
+}
+
+// A classic key, because `@Entry` warns that a closure value may invalidate dependents on every update.
+private struct FocusComposerKey: FocusedValueKey {
+    typealias Value = () -> Void
+}
+
+extension FocusedValues {
+    var focusComposer: (() -> Void)? {
+        get { self[FocusComposerKey.self] }
+        set { self[FocusComposerKey.self] = newValue }
     }
 }
 
