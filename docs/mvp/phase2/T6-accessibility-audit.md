@@ -123,7 +123,7 @@ Checked and left alone:
 
 - **Category buttons** already had their name plus the selected trait (`selected=1` on the chosen one). The probe shows the system focus ring around a focused category capsule, so they needed no focus fix.
 - **Add task**, **toggle** and **delete** labels from P1-T5 are meaningful. The header reads in order: "MINIMA LIST", the `More` menu, greeting, date, progress.
-- **`•••` hit target** is about 25 × 14 pt. Its label ("More") is right. Enlarging it would grow the header row and shift the layout, which the brief rules out unless a fix needs it, and §12 sets no target size. Left for the owner to decide, possibly with P3 polish.
+- **`•••` hit target** is about 25 × 14 pt. Its label ("More") is right. Enlarging it would grow the header row and shift the layout, which the brief rules out unless a fix needs it, and §12 sets no target size. Owner decision (2026-10-28): keep the current size.
 - **Toggle wording vs. context menu:** the toggle reads "Mark *title* incomplete", while the context menu says "Reopen". Both say what they do. The toggle follows design §12's "Mark reply to email complete" pattern, and the context menu sits on the row, so it doesn't need the title. Not a naming gap; left as is.
 - **Completed toggle reports `selected=1`.** SwiftUI adds this to the completed row's toggle. VoiceOver may add "selected" after "Mark *title* incomplete", which is accurate. Left as is.
 - **Row announcement:** each row reads its toggle (title and state), title, category name and delete button, in that order. The completed state is in the toggle label; the strikethrough isn't read.
@@ -134,16 +134,16 @@ Run with keyboard navigation on (System Settings › Keyboard › Keyboard navig
 
 | # | Step | Expected | Result |
 | --- | --- | --- | --- |
-| 1 | Launch, then type a task without touching the mouse. | Typing goes into the composer, which shows a focus ring. | |
-| 2 | Tab to Life and press Space. | Tab passes Add task and Focus with a visible focus ring; Space selects Life and focus returns to the composer. | |
-| 3 | Press Return. | The task is added with the Life category. | |
-| 4 | Tab to the new task's circle and press Space. | It is marked complete. | |
-| 5 | Tab to the same row's delete button. | The `×` appears while it has focus. | |
-| 6 | Press Space. | The task is deleted. | |
-| 7 | Tab to `•••`, open it with Space, choose Hide completed. | Completed rows are hidden. | |
-| 8 | Press ⌘N. | Focus returns to the composer; no second window opens. | |
-| 9 | Turn on VoiceOver (⌘F5) and move through the whole widget. | Every control is announced with a name that says what it does; the progress bar reads "N of M done". | |
-| 10 | With VoiceOver, move over the empty state (no tasks, or all hidden). | It is read as one sentence with no "circle". | |
-| 11 | With VoiceOver, move through a row. | It announces the title, category and state. | |
-| 12 | Tab to the category that is already selected and press Space. | Focus goes back to the composer. | |
-| 13 | Type a draft, pick a category by keyboard, then type more. | The draft is selected when focus returns, so the next keystroke replaces it. Record whether that is acceptable. | |
+| 1 | Launch, then type a task without touching the mouse. | Typing goes into the composer, which shows a focus ring. | Pass (owner, 2026-10-28) |
+| 2 | Tab to Life and press Space. | Tab passes Add task and Focus with a visible focus ring; Space selects Life and focus returns to the composer. | Pass (owner, 2026-10-28) |
+| 3 | Press Return. | The task is added with the Life category. | Pass (owner, 2026-10-28) |
+| 4 | Tab to the new task's circle and press Space. | It is marked complete. | Pass (owner, 2026-10-28) |
+| 5 | Tab to the same row's delete button. | The `×` appears while it has focus. | Pass (owner, 2026-10-28) |
+| 6 | Press Space. | The task is deleted. | Pass (owner, 2026-10-28) |
+| 7 | Tab to `•••`, open it with Space, choose Hide completed. | Completed rows are hidden. | Pass (owner, 2026-10-28) |
+| 8 | Press ⌘N. | Focus returns to the composer; no second window opens. | Pass (owner, 2026-10-28) |
+| 9 | Turn on VoiceOver (⌘F5) and move through the whole widget. | Every control is announced with a name that says what it does; the progress bar reads "N of M done". | Pass (owner, 2026-10-28) |
+| 10 | With VoiceOver, move over the empty state (no tasks, or all hidden). | It is read as one sentence with no "circle". | Pass (owner, 2026-10-28) |
+| 11 | With VoiceOver, move through a row. | It announces the title, category and state. | Pass (owner, 2026-10-28) |
+| 12 | Tab to the category that is already selected and press Space. | Focus goes back to the composer. | Pass (owner, 2026-10-28) |
+| 13 | Type a draft, pick a category by keyboard, then type more. | The draft is selected when focus returns, so the next keystroke replaces it. Record whether that is acceptable. | Pass (owner, 2026-10-28; draft selection accepted) |
