@@ -25,6 +25,7 @@ struct TaskRow: View {
             Button(action: onToggle) {
                 Image(systemName: task.isComplete ? "checkmark.circle.fill" : "circle")
                     .font(.title3)
+                    .contentTransition(.symbolEffect(.replace))
                     .foregroundStyle(task.isComplete ? Color.accentCoral : Color.textSecondary)
                     .animation(Motion.toggle(reduceMotion: reduceMotion), value: task.isComplete)
             }

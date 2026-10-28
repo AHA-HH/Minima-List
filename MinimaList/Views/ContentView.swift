@@ -17,13 +17,19 @@ struct ContentView: View {
         let visibleTasks = Self.visibleTasks(store.tasks, hidingCompleted: isHidingCompleted)
         VStack(spacing: 0) {
             header
-            if visibleTasks.isEmpty {
-                emptyState
-                    .transition(.opacity)
-            } else {
-                list(visibleTasks)
-                    .transition(.opacity)
+            // A ZStack so the empty state and list crossfade in one frame instead of splitting the height.
+            ZStack {
+                if visibleTasks.isEmpty {
+                    emptyState
+                        .transition(.opacity)
+                } else {
+                    list(visibleTasks)
+                        .transition(.opacity)
+                }
             }
+            .frame(maxHeight: .infinity)
+            // Keyed on the visible rows, so every path that adds or removes one animates, toggling while hidden included.
+            .animation(Motion.removal(reduceMotion: reduceMotion), value: visibleTasks.map(\.id))
             composer
         }
         .defaultFocus($isInputFocused, true)
@@ -72,13 +78,9 @@ struct ContentView: View {
 
     private var overflowMenu: some View {
         Menu {
-            Button(isHidingCompleted ? "Show completed" : "Hide completed") {
-                withAnimation(Motion.removal(reduceMotion: reduceMotion)) { isHidingCompleted.toggle() }
-            }
-            Button("Clear completed") {
-                withAnimation(Motion.removal(reduceMotion: reduceMotion)) { store.clearCompleted() }
-            }
-            .disabled(store.completedCount == 0)
+            Button(isHidingCompleted ? "Show completed" : "Hide completed") { isHidingCompleted.toggle() }
+            Button("Clear completed") { store.clearCompleted() }
+                .disabled(store.completedCount == 0)
             Divider()
             Button("Quit Minima List") { NSApplication.shared.terminate(nil) }
                 .keyboardShortcut("q")
@@ -100,9 +102,7 @@ struct ContentView: View {
                     TaskRow(
                         task: task,
                         onToggle: { store.toggle(task.id) },
-                        onDelete: {
-                            withAnimation(Motion.removal(reduceMotion: reduceMotion)) { store.remove(task.id) }
-                        }
+                        onDelete: { store.remove(task.id) }
                     )
                     .transition(Motion.rowTransition(reduceMotion: reduceMotion))
                 }
@@ -159,7 +159,7 @@ struct ContentView: View {
     }
 
     private func addTask() {
-        withAnimation(Motion.removal(reduceMotion: reduceMotion)) { store.add(title: text, category: category) }
+        store.add(title: text, category: category)
         text = ""
         isInputFocused = true
     }
