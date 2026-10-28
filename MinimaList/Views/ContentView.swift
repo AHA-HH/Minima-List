@@ -7,6 +7,7 @@ struct ContentView: View {
     @State private var category: TaskCategory = .focus
     @State private var isHidingCompleted = false
     @FocusState private var isInputFocused: Bool
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     static func visibleTasks(_ tasks: [TaskItem], hidingCompleted: Bool) -> [TaskItem] {
         hidingCompleted ? tasks.filter { !$0.isComplete } : tasks
@@ -18,8 +19,10 @@ struct ContentView: View {
             header
             if visibleTasks.isEmpty {
                 emptyState
+                    .transition(.opacity)
             } else {
                 list(visibleTasks)
+                    .transition(.opacity)
             }
             composer
         }
@@ -69,9 +72,13 @@ struct ContentView: View {
 
     private var overflowMenu: some View {
         Menu {
-            Button(isHidingCompleted ? "Show completed" : "Hide completed") { isHidingCompleted.toggle() }
-            Button("Clear completed") { store.clearCompleted() }
-                .disabled(store.completedCount == 0)
+            Button(isHidingCompleted ? "Show completed" : "Hide completed") {
+                withAnimation(Motion.removal(reduceMotion: reduceMotion)) { isHidingCompleted.toggle() }
+            }
+            Button("Clear completed") {
+                withAnimation(Motion.removal(reduceMotion: reduceMotion)) { store.clearCompleted() }
+            }
+            .disabled(store.completedCount == 0)
             Divider()
             Button("Quit Minima List") { NSApplication.shared.terminate(nil) }
                 .keyboardShortcut("q")
@@ -93,8 +100,11 @@ struct ContentView: View {
                     TaskRow(
                         task: task,
                         onToggle: { store.toggle(task.id) },
-                        onDelete: { store.remove(task.id) }
+                        onDelete: {
+                            withAnimation(Motion.removal(reduceMotion: reduceMotion)) { store.remove(task.id) }
+                        }
                     )
+                    .transition(Motion.rowTransition(reduceMotion: reduceMotion))
                 }
             }
             .padding(.horizontal, 16)
@@ -149,7 +159,7 @@ struct ContentView: View {
     }
 
     private func addTask() {
-        store.add(title: text, category: category)
+        withAnimation(Motion.removal(reduceMotion: reduceMotion)) { store.add(title: text, category: category) }
         text = ""
         isInputFocused = true
     }
