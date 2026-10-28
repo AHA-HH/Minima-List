@@ -27,6 +27,11 @@ struct ContentViewTests {
         #expect(ContentView.visibleTasks(done, hidingCompleted: true).isEmpty)
     }
 
+    @Test func progressLabelCountsDoneOfTotal() {
+        #expect(ContentView.progressLabel(completed: 2, total: 5) == "2 of 5 done")
+        #expect(ContentView.progressLabel(completed: 0, total: 0) == "0 of 0 done")
+    }
+
     @Test(arguments: [false, true])
     func noTasksIsEmpty(hidingCompleted: Bool) {
         #expect(ContentView.visibleTasks([], hidingCompleted: hidingCompleted).isEmpty)

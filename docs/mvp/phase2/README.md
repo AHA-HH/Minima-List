@@ -17,7 +17,7 @@ Tasks in the same wave touch different files and can run in parallel. T1, T2, T4
 | 4 | P2-T5 | [Motion and Reduce Motion](T5-motion.md) | P2-T3, P2-T4 |
 | 5 | P2-T6 | [Accessibility pass](T6-accessibility.md) | P2-T1 to P2-T5 |
 
-- [ ] P2-T1 · [ ] P2-T3 · [ ] P2-T2 · [ ] P2-T4 · [ ] P2-T5 · [ ] P2-T6
+- [x] P2-T1 · [x] P2-T3 · [x] P2-T2 · [x] P2-T4 · [x] P2-T5 · [ ] P2-T6
 
 Tick an item only after both reviews pass (the thermo-nuclear code quality review and the `reviewer` agent) and the PR is merged.
 

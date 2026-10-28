@@ -4,12 +4,16 @@ import SwiftUI
 /// category never depends on color alone (design §12).
 struct CategorySelector: View {
     @Binding var selection: TaskCategory
+    var onPick: () -> Void = {}
 
     var body: some View {
         HStack(spacing: 6) {
             ForEach(TaskCategory.allCases, id: \.self) { category in
                 let isSelected = category == selection
-                Button { selection = category } label: {
+                Button {
+                    selection = category
+                    onPick()
+                } label: {
                     HStack(spacing: 5) {
                         Circle()
                             .fill(category.color)

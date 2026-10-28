@@ -8,9 +8,14 @@ struct ContentView: View {
     @State private var isHidingCompleted = false
     @FocusState private var isInputFocused: Bool
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.controlActiveState) private var controlActiveState
 
     static func visibleTasks(_ tasks: [TaskItem], hidingCompleted: Bool) -> [TaskItem] {
         hidingCompleted ? tasks.filter { !$0.isComplete } : tasks
+    }
+
+    static func progressLabel(completed: Int, total: Int) -> String {
+        "\(completed) of \(total) done"
     }
 
     var body: some View {
@@ -61,12 +66,17 @@ struct ContentView: View {
                         .foregroundStyle(Color.textSecondary)
                 }
             }
+            let progress = Self.progressLabel(completed: store.completedCount, total: store.tasks.count)
             HStack(spacing: 10) {
                 ProgressView(value: store.progress)
                     .tint(Color.accentCoral)
-                Text("\(store.completedCount) of \(store.tasks.count) done")
+                    .accessibilityLabel("Progress")
+                    .accessibilityValue(progress)
+                // The bar already reads this as its value.
+                Text(progress)
                     .font(.caption)
                     .foregroundStyle(Color.textSecondary)
+                    .accessibilityHidden(true)
             }
             .padding(.top, 8)
         }
@@ -119,6 +129,7 @@ struct ContentView: View {
                 .font(.system(size: 40, weight: .light))
                 .foregroundStyle(Color.textSecondary)
                 .padding(.bottom, 4)
+                .accessibilityHidden(true)
             Text("Nothing here yet.")
                 .foregroundStyle(Color.textPrimary)
             Text("What's one thing to do?")
@@ -136,8 +147,15 @@ struct ContentView: View {
                     .foregroundStyle(Color.textPrimary)
                     .focused($isInputFocused)
                     .onSubmit(addTask)
+                    .accessibilityLabel("New task")
                     .padding(12)
                     .background(Color.surfaceRaised, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    // The plain style draws no focus ring (design §12). Like the system's, this one shows only in the key window.
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                            .strokeBorder(Color(nsColor: .keyboardFocusIndicatorColor), lineWidth: 2)
+                            .opacity(isInputFocused && controlActiveState == .key ? 1 : 0)
+                    }
                 Button(action: addTask) {
                     Image(systemName: "plus")
                         .font(.body.weight(.semibold))
@@ -148,7 +166,8 @@ struct ContentView: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel("Add task")
             }
-            CategorySelector(selection: $category)
+            // Back to the composer after a pick, so Return adds the task as the keyboard walkthrough expects.
+            CategorySelector(selection: $category) { isInputFocused = true }
             Text("Return to add · ⌘N to focus")
                 .font(.caption)
                 .foregroundStyle(Color.textSecondary)
