@@ -6,6 +6,7 @@ struct TaskRow: View {
     let onDelete: () -> Void
 
     @State private var isHovered = false
+    @FocusState private var isDeleteFocused: Bool
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     static func toggleLabel(for task: TaskItem) -> String {
@@ -54,14 +55,16 @@ struct TaskRow: View {
 
             // Hidden by opacity, not removed, so the title never reflows. Zero opacity would otherwise
             // drop it from the accessibility tree; .accessibilityHidden(false) keeps it reachable while invisible.
+            // Keyboard focus shows it too, so Tab never lands on an invisible button (design §15).
             Button(action: onDelete) {
                 Image(systemName: "xmark")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(Color.textSecondary)
             }
             .buttonStyle(.plain)
-            .opacity(isHovered ? 1 : 0)
-            .animation(Motion.hover(reduceMotion: reduceMotion), value: isHovered)
+            .focused($isDeleteFocused)
+            .opacity(isHovered || isDeleteFocused ? 1 : 0)
+            .animation(Motion.hover(reduceMotion: reduceMotion), value: isHovered || isDeleteFocused)
             .accessibilityLabel(Self.deleteLabel(for: task))
             .accessibilityHidden(false)
         }
