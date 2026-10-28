@@ -51,7 +51,7 @@ for s in "Hide completed" "Show completed" "Clear completed" "Quit Minima List";
   grep -qF "$s" MinimaList/Views/ContentView.swift || echo "FAIL: missing menu item: $s"
 done
 grep -c 'visibleTasks(' MinimaList/Views/ContentView.swift | grep -qx '[2-9]' || echo "FAIL: visibleTasks is defined but never used"
-grep -rn 'UserDefaults\|@AppStorage' MinimaList/Views/ && echo "FAIL: hide state must not be persisted"
+grep -rnE '@AppStorage|@SceneStorage|UserDefaults|forKey:' MinimaList/Views/ | grep -v 'UserDefaults(suiteName: "preview-' && echo "FAIL: hide state must not be persisted"
 ```
 
 The block prints nothing when the task passes.

@@ -5,15 +5,21 @@ struct ContentView: View {
 
     @State private var text = ""
     @State private var category: TaskCategory = .focus
+    @State private var isHidingCompleted = false
     @FocusState private var isInputFocused: Bool
 
+    static func visibleTasks(_ tasks: [TaskItem], hidingCompleted: Bool) -> [TaskItem] {
+        hidingCompleted ? tasks.filter { !$0.isComplete } : tasks
+    }
+
     var body: some View {
+        let visibleTasks = Self.visibleTasks(store.tasks, hidingCompleted: isHidingCompleted)
         VStack(spacing: 0) {
             header
-            if store.tasks.isEmpty {
+            if visibleTasks.isEmpty {
                 emptyState
             } else {
-                list
+                list(visibleTasks)
             }
             composer
         }
@@ -26,10 +32,14 @@ struct ContentView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("MINIMA LIST")
-                .font(.caption.bold())
-                .tracking(1.5)
-                .foregroundStyle(Color.textSecondary)
+            HStack {
+                Text("MINIMA LIST")
+                    .font(.caption.bold())
+                    .tracking(1.5)
+                    .foregroundStyle(Color.textSecondary)
+                Spacer()
+                overflowMenu
+            }
             // Only the greeting and date tick, so a widget left open overnight stays current.
             TimelineView(.everyMinute) { context in
                 VStack(alignment: .leading, spacing: 6) {
@@ -56,10 +66,29 @@ struct ContentView: View {
         .padding(.bottom, 16)
     }
 
-    private var list: some View {
+    private var overflowMenu: some View {
+        Menu {
+            Button(isHidingCompleted ? "Show completed" : "Hide completed") { isHidingCompleted.toggle() }
+            Button("Clear completed") { store.clearCompleted() }
+                .disabled(store.completedCount == 0)
+            Divider()
+            Button("Quit Minima List") { NSApplication.shared.terminate(nil) }
+                .keyboardShortcut("q")
+        } label: {
+            Image(systemName: "ellipsis")
+                .foregroundStyle(Color.textSecondary)
+        }
+        .menuIndicator(.hidden)
+        .menuStyle(.button)
+        .buttonStyle(.borderless)
+        .fixedSize()
+        .accessibilityLabel("More")
+    }
+
+    private func list(_ tasks: [TaskItem]) -> some View {
         ScrollView {
             LazyVStack(spacing: 8) {
-                ForEach(store.tasks) { task in
+                ForEach(tasks) { task in
                     TaskRow(
                         task: task,
                         onToggle: { store.toggle(task.id) },
