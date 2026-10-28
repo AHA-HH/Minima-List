@@ -9,6 +9,8 @@ struct TaskRow: View {
     @FocusState private var isDeleteFocused: Bool
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
+    private var showsDelete: Bool { isHovered || isDeleteFocused }
+
     static func toggleLabel(for task: TaskItem) -> String {
         "Mark \(task.title) \(task.isComplete ? "incomplete" : "complete")"
     }
@@ -63,8 +65,8 @@ struct TaskRow: View {
             }
             .buttonStyle(.plain)
             .focused($isDeleteFocused)
-            .opacity(isHovered || isDeleteFocused ? 1 : 0)
-            .animation(Motion.hover(reduceMotion: reduceMotion), value: isHovered || isDeleteFocused)
+            .opacity(showsDelete ? 1 : 0)
+            .animation(Motion.hover(reduceMotion: reduceMotion), value: showsDelete)
             .accessibilityLabel(Self.deleteLabel(for: task))
             .accessibilityHidden(false)
         }

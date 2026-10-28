@@ -12,7 +12,9 @@
 | `AXUIElementSetAttributeValue(app, "AXEnhancedUserInterface", true)` on `AXUIElementCreateApplication(getpid())` | Returned `-25208` (attribute unsupported). |
 | `AXUIElementCopyAttributeValue` walk from `AXUIElementCreateApplication(getpid())` | **Works**, although `AXIsProcessTrusted()` is `false`: the app may query its own elements. This is the full tree an assistive client sees, and the dumps below come from it. |
 
-Columns: role, `AXDescription` (the accessibility label), `AXValue`, `AXValueDescription` (what VoiceOver reads for a value, where present), `AXEnabled`, `AXSelected`. `-` means the attribute is absent. Static text carries its words in `AXValue`, which is what VoiceOver reads. The menu bar is left out.
+Columns: role, `AXDescription` (the accessibility label), `AXValue`, `AXValueDescription` (what VoiceOver reads for a value, where present), `AXEnabled`, `AXSelected`, `AXFocused`. `-` means the attribute is absent. Static text carries its words in `AXValue`, which is what VoiceOver reads. The menu bar is left out.
+
+The dumps record whether an element is **focused**, not whether it is focusable. Reachability was shown by setting `AXFocused` on elements (see "Keyboard focus in the probe"), not by a Tab walk.
 
 ### Before (main at d16ad44)
 
@@ -47,7 +49,7 @@ AXWindow
     AXStaticText        value="Return to add · ⌘N to focus"
 ```
 
-Every element is enabled. The empty-state tree was not captured before the fix.
+Every element is enabled. The empty-state tree was not captured before the fix. The raw "before" walk recorded role, description, title, value and enabled only, not `AXSelected` or `AXValueDescription`. So `selected=1` in the After dump is not new: the before walk simply didn't read it.
 
 ### After
 
@@ -100,6 +102,9 @@ Keyboard navigation is off on the probe machine, and the probe did not change th
 | Set `AXFocused` on `Delete Book dentist` | Focus moved to it, and the `×` became visible on that row only, with no hover. |
 | Set `AXFocused` on `Life` | Focus moved to it, and the system focus ring drew around the capsule. |
 | `AXPress` on `Life` (what Space does) | `Life` became selected and focus went back to the composer (`AXTextField desc="New task" focused=1`), which now shows its focus ring. |
+| Set `AXFocused` on `Focus` (already selected), then `AXPress` | Focus went back to the composer (`focused after press: AXTextField desc="New task" focused=1`). |
+| Window key, composer focused | The composer's focus ring is drawn. |
+| After `NSApp.deactivate()` (`key=false`) | The composer stays first responder (`focused=1`), but no ring is drawn, matching the system ring. |
 
 The real Tab walk is in the owner's walkthrough below.
 
@@ -111,8 +116,8 @@ The real Tab walk is in the owner's walkthrough below.
 | 2 | The progress bar had no label and read as a bare fraction, and "1 of 3 done" was a separate element after it. | The bar is labelled "Progress" and its value is the "1 of 3 done" text, from the new `ContentView.progressLabel(completed:total:)` (unit tested). The visible text uses the same function and is hidden from VoiceOver so it isn't read twice. |
 | 3 | The empty state's decorative `circle` symbol was inside the combined element. | `.accessibilityHidden(true)` on the image. The empty state now reads as one element: "Nothing here yet., What's one thing to do?" |
 | 4 | The delete button stayed at zero opacity when it had keyboard focus. | `@FocusState` in `TaskRow`. The button shows when the row is hovered **or** the button is focused. It stays in the tree and in the key loop. |
-| 5 | The plain-style composer drew no focus ring (the launch image shows the focused field with no ring). | A 2 pt stroke in the system `keyboardFocusIndicatorColor` around the field while it is focused. It is the system focus colour, not a new palette colour. |
-| 6 | After a category was picked with Tab and Space, focus stayed on the category button, where Return does nothing, so the walkthrough's "add it with Return" failed. | `.onChange(of: category) { isInputFocused = true }`. Picking a category returns focus to the composer, so Return adds the task. A mouse click already left focus in the field, so it is unchanged. Trade-off: after a keyboard pick, focus jumps back to the composer rather than staying on the selector, and AppKit selects the field's text on refocus, as it does on any Tab into a field. |
+| 5 | The plain-style composer drew no focus ring (the launch image shows the focused field with no ring). | A 2 pt stroke in the system `keyboardFocusIndicatorColor` around the field, drawn only while it is focused **and** the window is key (`controlActiveState == .key`). `@FocusState` stays true when the window resigns key, so without that gate the ring would show while typing goes to another app. It uses the system focus colour, not a new palette colour. |
+| 6 | After a category was picked with Tab and Space, focus stayed on the category button, where Return does nothing, so the walkthrough's "add it with Return" failed. | `CategorySelector` takes an `onPick` closure, called from each button's action after it sets the selection; `ContentView` passes `{ isInputFocused = true }`. It fires on the press itself, so pressing the category that is already selected also returns focus, and a programmatic change of the category never moves focus. A mouse click already left focus in the field, so that path is unchanged. Trade-offs: after a keyboard pick, focus jumps back to the composer rather than staying on the selector (a VoiceOver user exploring the selector also lands back in the composer), and AppKit selects the field's text on refocus, as on any Tab into a field, so the next keystroke replaces a typed draft. |
 
 Checked and left alone:
 
@@ -140,3 +145,5 @@ Run with keyboard navigation on (System Settings › Keyboard › Keyboard navig
 | 9 | Turn on VoiceOver (⌘F5) and move through the whole widget. | Every control is announced with a name that says what it does; the progress bar reads "N of M done". | |
 | 10 | With VoiceOver, move over the empty state (no tasks, or all hidden). | It is read as one sentence with no "circle". | |
 | 11 | With VoiceOver, move through a row. | It announces the title, category and state. | |
+| 12 | Tab to the category that is already selected and press Space. | Focus goes back to the composer. | |
+| 13 | Type a draft, pick a category by keyboard, then type more. | The draft is selected when focus returns, so the next keystroke replaces it. Record whether that is acceptable. | |

@@ -8,6 +8,7 @@ struct ContentView: View {
     @State private var isHidingCompleted = false
     @FocusState private var isInputFocused: Bool
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.controlActiveState) private var controlActiveState
 
     static func visibleTasks(_ tasks: [TaskItem], hidingCompleted: Bool) -> [TaskItem] {
         hidingCompleted ? tasks.filter { !$0.isComplete } : tasks
@@ -149,11 +150,11 @@ struct ContentView: View {
                     .accessibilityLabel("New task")
                     .padding(12)
                     .background(Color.surfaceRaised, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                    // The plain style draws no focus ring, so draw the system one (design §12).
+                    // The plain style draws no focus ring (design §12). Like the system's, this one shows only in the key window.
                     .overlay {
                         RoundedRectangle(cornerRadius: 14, style: .continuous)
                             .strokeBorder(Color(nsColor: .keyboardFocusIndicatorColor), lineWidth: 2)
-                            .opacity(isInputFocused ? 1 : 0)
+                            .opacity(isInputFocused && controlActiveState == .key ? 1 : 0)
                     }
                 Button(action: addTask) {
                     Image(systemName: "plus")
@@ -165,9 +166,8 @@ struct ContentView: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel("Add task")
             }
-            CategorySelector(selection: $category)
-                // Back to the composer after picking, so Return adds the task as the keyboard walkthrough expects.
-                .onChange(of: category) { isInputFocused = true }
+            // Back to the composer after a pick, so Return adds the task as the keyboard walkthrough expects.
+            CategorySelector(selection: $category) { isInputFocused = true }
             Text("Return to add · ⌘N to focus")
                 .font(.caption)
                 .foregroundStyle(Color.textSecondary)
