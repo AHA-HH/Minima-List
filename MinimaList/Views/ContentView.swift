@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     let store: TaskStore
+    let isFloatingWindowShown: Bool
 
     @State private var text = ""
     @State private var category: TaskCategory = .focus
@@ -9,6 +10,8 @@ struct ContentView: View {
     @FocusState private var isInputFocused: Bool
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.controlActiveState) private var controlActiveState
+    @Environment(\.openWindow) private var openWindow
+    @Environment(\.dismissWindow) private var dismissWindow
 
     static func visibleTasks(_ tasks: [TaskItem], hidingCompleted: Bool) -> [TaskItem] {
         hidingCompleted ? tasks.filter { !$0.isComplete } : tasks
@@ -91,6 +94,11 @@ struct ContentView: View {
             Button(isHidingCompleted ? "Show completed" : "Hide completed") { isHidingCompleted.toggle() }
             Button("Clear completed") { store.clearCompleted() }
                 .disabled(store.completedCount == 0)
+            if isFloatingWindowShown {
+                Button("Hide floating window") { dismissWindow(id: "widget") }
+            } else {
+                Button("Show floating window") { openWindow(id: "widget") }
+            }
             Divider()
             Button("Quit Minima List") { NSApplication.shared.terminate(nil) }
                 .keyboardShortcut("q")
@@ -202,5 +210,5 @@ extension FocusedValues {
     store.add(title: "Book dentist appointment for the week after next", category: .later)
     store.add(title: "Reply to that email", category: .focus)
     store.toggle(store.tasks[2].id)
-    return ContentView(store: store)
+    return ContentView(store: store, isFloatingWindowShown: true)
 }
