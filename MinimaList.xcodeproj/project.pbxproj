@@ -249,6 +249,8 @@
 				CODE_SIGN_ENTITLEMENTS = MinimaList/MinimaList.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Minima List listens only while the microphone button is on, to type the task you say.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Speech is turned into text on this Mac. Nothing is sent anywhere.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -264,6 +266,8 @@
 				CODE_SIGN_ENTITLEMENTS = MinimaList/MinimaList.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Minima List listens only while the microphone button is on, to type the task you say.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Speech is turned into text on this Mac. Nothing is sent anywhere.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
