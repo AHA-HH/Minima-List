@@ -3,6 +3,8 @@ import SwiftUI
 struct ContentView: View {
     let store: TaskStore
     let isFloatingWindowShown: Bool
+    /// Only the floating window collapses, so the panel passes nil and shows no pin.
+    var onPin: (() -> Void)? = nil
 
     @State private var text = ""
     @State private var category: TaskCategory = .focus
@@ -55,6 +57,15 @@ struct ContentView: View {
                     .tracking(1.5)
                     .foregroundStyle(Color.textSecondary)
                 Spacer()
+                if let onPin {
+                    Button(action: onPin) {
+                        Image(systemName: "pin")
+                            .foregroundStyle(Color.textSecondary)
+                    }
+                    .buttonStyle(.borderless)
+                    .accessibilityLabel("Collapse to bubble")
+                    .help("Collapse to bubble")
+                }
                 overflowMenu
             }
             // Only the greeting and date tick, so a widget left open overnight stays current.

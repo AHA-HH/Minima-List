@@ -79,14 +79,17 @@ struct TaskStoreTests {
             let store = TaskStore(defaults: defaults)
             #expect(store.progress == 0)
             #expect(store.completedCount == 0)
+            #expect(store.openCount == 0)
             store.add(title: "a", category: .focus)
             store.add(title: "b", category: .focus)
             store.toggle(store.tasks[0].id)
             #expect(store.progress == 0.5)
             #expect(store.completedCount == 1)
+            #expect(store.openCount == 1)
             store.toggle(store.tasks[1].id)
             #expect(store.progress == 1)
             #expect(store.completedCount == 2)
+            #expect(store.openCount == 0)
         }
     }
 

@@ -7,6 +7,7 @@ import Observation
     private(set) var tasks: [TaskItem]
 
     var completedCount: Int { tasks.filter(\.isComplete).count }
+    var openCount: Int { tasks.count - completedCount }
     var progress: Double { tasks.isEmpty ? 0 : Double(completedCount) / Double(tasks.count) }
 
     @ObservationIgnored private let defaults: UserDefaults
