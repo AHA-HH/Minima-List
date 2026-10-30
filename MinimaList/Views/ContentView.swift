@@ -10,6 +10,9 @@ struct ContentView: View {
     @State private var category: TaskCategory = .focus
     @State private var isHidingCompleted = false
     @FocusState private var isInputFocused: Bool
+    // Each widget listens on its own; one shared capture would tie the panel and the floating window together.
+    @State private var speech = SpeechCapture()
+    @State private var textBeforeDictation = ""
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.controlActiveState) private var controlActiveState
     @Environment(\.openWindow) private var openWindow
@@ -43,6 +46,13 @@ struct ContentView: View {
             composer
         }
         .defaultFocus($isInputFocused, true)
+        // Escape cancels only while listening, so it keeps its usual meaning otherwise.
+        .onExitCommand(perform: speech.isListening ? cancelDictation : nil)
+        // Closing the panel, hiding the window or collapsing it never leaves the microphone on.
+        .onDisappear(perform: cancelDictation)
+        .onChange(of: speech.transcript) { _, spoken in
+            if speech.isListening { text = spoken }
+        }
         .fontDesign(.rounded)
         .frame(width: 380, height: 610)
         .background(Color.widgetBackground)
@@ -174,6 +184,19 @@ struct ContentView: View {
                             .strokeBorder(Color(nsColor: .keyboardFocusIndicatorColor), lineWidth: 2)
                             .opacity(isInputFocused && controlActiveState == .key ? 1 : 0)
                     }
+                Button(action: toggleDictation) {
+                    // A steady recording state, never a pulse (design §9 Motion).
+                    Image(systemName: speech.isListening ? "mic.fill" : "mic")
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(speech.isListening ? Color.accentCoral : Color.textSecondary)
+                        .frame(width: 40, height: 40)
+                        .background(Color.surfaceRaised, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                }
+                .buttonStyle(.plain)
+                .disabled(speech.unavailableReason != nil)
+                .accessibilityLabel(speech.isListening ? "Stop dictating" : "Dictate task")
+                .accessibilityHint(speech.unavailableReason ?? "")
+                .help(speech.unavailableReason ?? (speech.isListening ? "Stop dictating" : "Dictate task"))
                 Button(action: addTask) {
                     Image(systemName: "plus")
                         .font(.body.weight(.semibold))
@@ -204,6 +227,25 @@ struct ContentView: View {
         store.add(title: text, category: category)
         text = ""
         isInputFocused = true
+    }
+
+    private func toggleDictation() {
+        if speech.isListening {
+            cancelDictation()
+            return
+        }
+        textBeforeDictation = text
+        // Finishing is exactly Return: the spoken text goes through addTask, which TaskStore trims and validates.
+        speech.start { spoken in
+            text = spoken
+            addTask()
+        }
+    }
+
+    private func cancelDictation() {
+        guard speech.isListening else { return }
+        speech.cancel()
+        text = textBeforeDictation
     }
 }
 

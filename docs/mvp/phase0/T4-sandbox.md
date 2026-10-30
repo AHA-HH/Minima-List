@@ -29,6 +29,7 @@ The entitlements signed into the built app (not just the `.entitlements` source 
 - No key starts with `com.apple.security.network.`.
 - No key starts with `com.apple.security.files.`.
 - No key starts with `com.apple.security.temporary-exception`.
+- From P3-T3: `com.apple.security.device.audio-input` is `true` (voice capture, design §8.8), and no key other than `app-sandbox`, `device.audio-input` and `get-task-allow` (added by Debug signing) is signed in.
 
 ## Must pass
 
@@ -40,7 +41,10 @@ APP=$(xcodebuild -project MinimaList.xcodeproj -scheme MinimaList -showBuildSett
   | awk -F' = ' '/ BUILT_PRODUCTS_DIR = /{d=$2} / FULL_PRODUCT_NAME = /{n=$2} END{print d"/"n}')
 ENT=$(codesign -d --entitlements - --xml "$APP" 2>/dev/null | plutil -convert xml1 -o - -)
 echo "$ENT" | grep -A1 'com.apple.security.app-sandbox' | grep -q '<true/>' || echo "FAIL: not sandboxed"
-echo "$ENT" | grep -E 'com\.apple\.security\.((network|files)\.|temporary-exception)' && echo "FAIL: extra entitlements"
+echo "$ENT" | grep -A1 'com.apple.security.device.audio-input' | grep -q '<true/>' || echo "FAIL: no microphone entitlement (P3-T3)"
+# Only these keys may be signed in; get-task-allow is added by Debug signing.
+echo "$ENT" | grep -o '<key>[^<]*</key>' | sed -E 's#</?key>##g' \
+  | grep -vxE 'com\.apple\.security\.(app-sandbox|device\.audio-input|get-task-allow)' | sed 's/^/FAIL: extra entitlement: /'
 test -e "$APP/Contents/Resources/MinimaList.entitlements" && echo "FAIL: entitlements copied into bundle"
 true  # a pass prints nothing; judge by output, not exit code
 ```
