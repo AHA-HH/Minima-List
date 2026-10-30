@@ -14,7 +14,7 @@ Each task edits `ContentView.swift`, and T1 and T3 both change the app target's 
 | 2 | P3-T2 | [Pin and collapse to a count bubble](T2-pin-bubble.md) | P3-T1 |
 | 3 | P3-T3 | [Voice capture](T3-voice-capture.md) | P3-T2 |
 
-- [ ] P3-T1 · [ ] P3-T2 · [ ] P3-T3
+- [x] P3-T1 · [x] P3-T2 · [x] P3-T3
 
 Tick an item only after both reviews pass (the thermo-nuclear code quality review and the `reviewer` agent) and the PR is merged.
 
