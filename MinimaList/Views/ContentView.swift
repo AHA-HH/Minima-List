@@ -243,9 +243,10 @@ struct ContentView: View {
     }
 
     private func cancelDictation() {
-        guard speech.isListening else { return }
+        let wasListening = speech.isListening
+        // Always cancel: a start can still be waiting on the permission prompt.
         speech.cancel()
-        text = textBeforeDictation
+        if wasListening { text = textBeforeDictation }
     }
 }
 

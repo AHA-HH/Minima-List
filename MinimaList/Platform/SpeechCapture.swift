@@ -16,6 +16,10 @@ import Speech
     @ObservationIgnored private var task: SFSpeechRecognitionTask?
     @ObservationIgnored private var lastSpeechAt: Date?
     @ObservationIgnored private var silenceCheck: Task<Void, Never>?
+    /// The permission requests before listening; cancel() must reach it, or the mic could start for a widget that's gone.
+    @ObservationIgnored private var pendingStart: Task<Void, Never>?
+    /// Tags recognition callbacks, so a late one from a stopped session can't touch the next.
+    @ObservationIgnored private var session = 0
 
     init() {
         refreshAvailability()
@@ -47,8 +51,8 @@ import Speech
     }
 
     func start(onFinish: @escaping (String) -> Void) {
-        guard !isListening else { return }
-        Task {
+        guard !isListening, pendingStart == nil else { return }
+        pendingStart = Task {
             if AVCaptureDevice.authorizationStatus(for: .audio) == .notDetermined {
                 _ = await AVCaptureDevice.requestAccess(for: .audio)
             }
@@ -56,6 +60,9 @@ import Speech
                 await withCheckedContinuation { done in SFSpeechRecognizer.requestAuthorization { _ in done.resume() } }
             }
             refreshAvailability()
+            // A cancelled start leaves pendingStart alone: cancel() cleared it, and a newer start may own it now.
+            guard !Task.isCancelled else { return }
+            pendingStart = nil
             guard unavailableReason == nil,
                   AVCaptureDevice.authorizationStatus(for: .audio) == .authorized,
                   SFSpeechRecognizer.authorizationStatus() == .authorized
@@ -64,8 +71,10 @@ import Speech
         }
     }
 
-    /// Stops listening and drops the transcript without calling `onFinish`.
+    /// Stops listening, or a start still waiting on permission, and drops the transcript without calling `onFinish`.
     func cancel() {
+        pendingStart?.cancel()
+        pendingStart = nil
         guard isListening else { return }
         isListening = false
         silenceCheck?.cancel()
@@ -95,7 +104,10 @@ import Speech
         request.requiresOnDeviceRecognition = true
         request.shouldReportPartialResults = true
         let input = engine.inputNode
-        input.installTap(onBus: 0, bufferSize: 1024, format: input.outputFormat(forBus: 0), block: Self.tap(into: request))
+        let format = input.outputFormat(forBus: 0)
+        // With no audio input (a desktop Mac with no mic), the format is 0 Hz and installTap would raise, not throw.
+        guard format.sampleRate > 0, format.channelCount > 0 else { return }
+        input.installTap(onBus: 0, bufferSize: 1024, format: format, block: Self.tap(into: request))
         engine.prepare()
         do {
             try engine.start()
@@ -107,7 +119,8 @@ import Speech
         transcript = ""
         lastSpeechAt = nil
         isListening = true
-        task = recognizer.recognitionTask(with: request, resultHandler: Self.resultHandler(for: self))
+        session += 1
+        task = recognizer.recognitionTask(with: request, resultHandler: Self.resultHandler(for: self, session: session))
         silenceCheck = Task { [weak self] in
             while !Task.isCancelled {
                 try? await Task.sleep(for: .milliseconds(250))
@@ -122,8 +135,8 @@ import Speech
         }
     }
 
-    private func heard(_ text: String?, failed: Bool) {
-        guard isListening else { return }
+    private func heard(_ text: String?, failed: Bool, in session: Int) {
+        guard isListening, session == self.session else { return }
         if let text, text != transcript {
             transcript = text
             lastSpeechAt = .now
@@ -136,11 +149,11 @@ import Speech
         { buffer, _ in request.append(buffer) }
     }
 
-    nonisolated private static func resultHandler(for capture: SpeechCapture) -> (SFSpeechRecognitionResult?, Error?) -> Void {
+    nonisolated private static func resultHandler(for capture: SpeechCapture, session: Int) -> (SFSpeechRecognitionResult?, Error?) -> Void {
         { [weak capture] result, error in
             let text = result?.bestTranscription.formattedString
             let failed = error != nil
-            Task { @MainActor in capture?.heard(text, failed: failed) }
+            Task { @MainActor in capture?.heard(text, failed: failed, in: session) }
         }
     }
 }
