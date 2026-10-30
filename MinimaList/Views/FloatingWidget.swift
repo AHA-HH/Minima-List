@@ -9,10 +9,13 @@ struct FloatingWidget: View {
     @State private var isCollapsed = false
 
     var body: some View {
-        if isCollapsed {
-            CountBubble(openCount: store.openCount) { isCollapsed = false }
-        } else {
-            ContentView(store: store, isFloatingWindowShown: isFloatingWindowShown) { isCollapsed = true }
+        Group {
+            if isCollapsed {
+                CountBubble(openCount: store.openCount) { isCollapsed = false }
+            } else {
+                ContentView(store: store, isFloatingWindowShown: isFloatingWindowShown) { isCollapsed = true }
+            }
         }
+        .background(WindowAccessor(isCollapsed: isCollapsed))
     }
 }
