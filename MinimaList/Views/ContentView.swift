@@ -181,7 +181,8 @@ struct ContentView: View {
                 .font(.caption)
                 .foregroundStyle(Color.textSecondary)
                 .keyboardShortcut("n")
-                .accessibilityLabel("Focus new task field")
+                // Keep the visible words as the name (label-in-name); the hint says what pressing does.
+                .accessibilityHint("Focuses the new task field")
         }
         .padding(.horizontal, 16)
         .padding(.top, 12)
