@@ -124,7 +124,7 @@ import Speech
         silenceCheck = Task { [weak self] in
             while !Task.isCancelled {
                 try? await Task.sleep(for: .milliseconds(250))
-                guard let self, self.isListening else { return }
+                guard !Task.isCancelled, let self, self.isListening else { return }
                 if Self.shouldFinish(lastSpeechAt: self.lastSpeechAt, now: .now) {
                     let text = self.transcript
                     self.cancel()
