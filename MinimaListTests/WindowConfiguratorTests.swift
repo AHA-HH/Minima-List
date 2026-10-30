@@ -31,6 +31,26 @@ struct WindowConfiguratorTests {
         }
     }
 
+    @Test func collapsingDropsTheTitleBarAndExpandingRestoresIt() {
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 200, height: 200),
+            styleMask: [.titled, .closable, .miniaturizable, .resizable],
+            backing: .buffered,
+            defer: true
+        )
+        WindowConfigurator.configure(window)
+
+        WindowConfigurator.setCollapsed(true, window)
+        #expect(!window.styleMask.contains(.titled))
+        #expect(window.level == .floating)
+
+        WindowConfigurator.setCollapsed(false, window)
+        #expect(window.styleMask.contains(.titled))
+        #expect(window.styleMask.contains(.fullSizeContentView))
+        #expect(window.standardWindowButton(.closeButton)?.isHidden == true)
+        #expect(window.contentView?.safeAreaInsets.top == 0)
+    }
+
     @Test func configureCancelsTheTitleBarSafeArea() throws {
         let window = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 200, height: 200),

@@ -8,8 +8,7 @@ struct MinimaListApp: App {
     var body: some Scene {
         // A single-instance Window, so Show floating window brings back the one widget instead of opening another.
         Window("Minima List", id: "widget") {
-            ContentView(store: store, isFloatingWindowShown: isFloatingWindowShown)
-                .background(WindowAccessor())
+            FloatingWidget(store: store, isFloatingWindowShown: isFloatingWindowShown)
                 .onAppear { isFloatingWindowShown = true }
                 .onDisappear { isFloatingWindowShown = false }
         }

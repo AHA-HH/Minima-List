@@ -25,10 +25,25 @@ enum WindowConfigurator {
         let titlebarHeight = window.frame.height - window.contentLayoutRect.height
         window.contentView?.additionalSafeAreaInsets = NSEdgeInsets(top: -titlebarHeight, left: 0, bottom: 0, right: 0)
     }
+
+    /// A titled window draws its own rounded-square border and shadow around the count bubble (design §8.7). The bubble never
+    /// takes typing, so it drops `.titled` while collapsed; expanding restores it so the composer can become key again.
+    @MainActor static func setCollapsed(_ collapsed: Bool, _ window: NSWindow) {
+        guard collapsed == window.styleMask.contains(.titled) else { return }
+        if collapsed {
+            window.styleMask.remove(.titled)
+        } else {
+            window.styleMask.insert(.titled)
+            configure(window)
+        }
+        window.invalidateShadow()
+    }
 }
 
 /// Hands the hosting `NSWindow` to `WindowConfigurator` as soon as SwiftUI attaches the view.
 struct WindowAccessor: NSViewRepresentable {
+    var isCollapsed = false
+
     final class ConfiguringView: NSView {
         override func viewDidMoveToWindow() {
             super.viewDidMoveToWindow()
@@ -37,5 +52,7 @@ struct WindowAccessor: NSViewRepresentable {
     }
 
     func makeNSView(context: Context) -> ConfiguringView { ConfiguringView() }
-    func updateNSView(_ nsView: ConfiguringView, context: Context) {}
+    func updateNSView(_ nsView: ConfiguringView, context: Context) {
+        if let window = nsView.window { WindowConfigurator.setCollapsed(isCollapsed, window) }
+    }
 }
