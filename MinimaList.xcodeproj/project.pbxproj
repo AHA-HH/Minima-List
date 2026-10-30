@@ -248,6 +248,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = MinimaList/MinimaList.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -262,6 +263,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = MinimaList/MinimaList.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",

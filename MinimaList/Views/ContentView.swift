@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     let store: TaskStore
+    let isFloatingWindowShown: Bool
 
     @State private var text = ""
     @State private var category: TaskCategory = .focus
@@ -9,6 +10,8 @@ struct ContentView: View {
     @FocusState private var isInputFocused: Bool
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.controlActiveState) private var controlActiveState
+    @Environment(\.openWindow) private var openWindow
+    @Environment(\.dismissWindow) private var dismissWindow
 
     static func visibleTasks(_ tasks: [TaskItem], hidingCompleted: Bool) -> [TaskItem] {
         hidingCompleted ? tasks.filter { !$0.isComplete } : tasks
@@ -38,7 +41,6 @@ struct ContentView: View {
             composer
         }
         .defaultFocus($isInputFocused, true)
-        .focusedSceneValue(\.focusComposer) { isInputFocused = true }
         .fontDesign(.rounded)
         .frame(width: 380, height: 610)
         .background(Color.widgetBackground)
@@ -91,6 +93,11 @@ struct ContentView: View {
             Button(isHidingCompleted ? "Show completed" : "Hide completed") { isHidingCompleted.toggle() }
             Button("Clear completed") { store.clearCompleted() }
                 .disabled(store.completedCount == 0)
+            if isFloatingWindowShown {
+                Button("Hide floating window") { dismissWindow(id: "widget") }
+            } else {
+                Button("Show floating window") { openWindow(id: "widget") }
+            }
             Divider()
             Button("Quit Minima List") { NSApplication.shared.terminate(nil) }
                 .keyboardShortcut("q")
@@ -168,9 +175,14 @@ struct ContentView: View {
             }
             // Back to the composer after a pick, so Return adds the task as the keyboard walkthrough expects.
             CategorySelector(selection: $category) { isInputFocused = true }
-            Text("Return to add · ⌘N to focus")
+            // An accessory app shows no menu bar, and the panel's scene doesn't reach app commands, so ⌘N lives on a visible control.
+            Button("Return to add · ⌘N to focus") { isInputFocused = true }
+                .buttonStyle(.plain)
                 .font(.caption)
                 .foregroundStyle(Color.textSecondary)
+                .keyboardShortcut("n")
+                // Keep the visible words as the name (label-in-name); the hint says what pressing does.
+                .accessibilityHint("Focuses the new task field")
         }
         .padding(.horizontal, 16)
         .padding(.top, 12)
@@ -184,23 +196,11 @@ struct ContentView: View {
     }
 }
 
-// A classic key, because `@Entry` warns that a closure value may invalidate dependents on every update.
-private struct FocusComposerKey: FocusedValueKey {
-    typealias Value = () -> Void
-}
-
-extension FocusedValues {
-    var focusComposer: (() -> Void)? {
-        get { self[FocusComposerKey.self] }
-        set { self[FocusComposerKey.self] = newValue }
-    }
-}
-
 #Preview {
     let store = TaskStore(defaults: UserDefaults(suiteName: "preview-\(UUID())")!)
     store.add(title: "Buy oat milk", category: .life)
     store.add(title: "Book dentist appointment for the week after next", category: .later)
     store.add(title: "Reply to that email", category: .focus)
     store.toggle(store.tasks[2].id)
-    return ContentView(store: store)
+    return ContentView(store: store, isFloatingWindowShown: true)
 }
