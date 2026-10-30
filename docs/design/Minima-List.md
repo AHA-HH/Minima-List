@@ -493,9 +493,9 @@ P0 Scaffold ──► P1 Core loop ──► P2 Daily usability ──► P3 Men
 
 **Goal:** Minima List lives in the menu bar with no Dock icon, the floating window can collapse to a count bubble, and a task can be added by speaking. Task briefs: [`docs/mvp/phase3/`](../mvp/phase3/README.md).
 
-- [ ] **P3-T1** Menu-bar app (§8.6): no Dock icon (`LSUIElement`), a `MenuBarExtra` icon whose drop-down panel shows the same widget and store, and Show/Hide floating window in `•••`.
-- [ ] **P3-T2** Pin and collapse (§8.7): a pin button collapses the floating window to a floating circle with the open-task count; clicking the circle expands it in place.
-- [ ] **P3-T3** Voice capture (§8.8): a microphone button records with on-device speech recognition, shows the words in the composer, and adds the task automatically after about 1.5 s of silence.
+- [x] **P3-T1** Menu-bar app (§8.6): no Dock icon (`LSUIElement`), a `MenuBarExtra` icon whose drop-down panel shows the same widget and store, and Show/Hide floating window in `•••`. `⌘N` moved from the File menu onto the widget's `Return to add · ⌘N to focus` hint button (risk table below).
+- [x] **P3-T2** Pin and collapse (§8.7): a pin button collapses the floating window to a floating circle with the open-task count; clicking the circle expands it in place. While collapsed the window drops `.titled` (risk table below).
+- [x] **P3-T3** Voice capture (§8.8): a microphone button records with on-device speech recognition, shows the words in the composer, and adds the task automatically after about 1.5 s of silence.
 
 **Unit tests:** the open-task count and its bubble text (a check mark at zero); the end-of-speech rule (a pause of the threshold after speech ends listening, and a pause before any speech doesn't); a transcript becomes a task only when it's non-empty after trimming.
 
@@ -517,9 +517,9 @@ These were the original Phase 3 ideas. They stay here as candidates, not commitm
 | Risk | Why it matters | Check in | Fallback |
 | --- | --- | --- | --- |
 | A `WindowGroup` window may not appear over full-screen apps | Breaks the "persistent presence" goal | P1-T3 | Host the view in an `NSPanel` with `.nonactivatingPanel` |
-| A borderless window can refuse key status, so the text field can't take focus | Breaks typing into the composer | P1-T3 / P1-T4 | Keep `.titled` with `titlebarAppearsTransparent` and `.fullSizeContentView` instead of `.borderless` |
+| A borderless window can refuse key status, so the text field can't take focus | Breaks typing into the composer | P1-T3 / P1-T4 | Keep `.titled` with `titlebarAppearsTransparent` and `.fullSizeContentView` instead of `.borderless`. **Exception (owner, 2026-10-30):** the collapsed count bubble (P3-T2) drops `.titled`, because a titled window draws a rounded-square outline and shadow around the circle; expanding restores it. The bubble then can't be reached with Full Keyboard Access, but mouse and VoiceOver work. |
 | Hover-only delete is unreachable by keyboard | Accessibility requirement (§12) | P2-T6 | The context menu and a focusable delete control cover it |
-| An accessory app (no Dock icon) shows no main menu bar, so `⌘N` and `⌘Q` may stop firing | Breaks P2-T4's shortcut | P3-T1 | Keep Quit in `•••` and the panel; move `⌘N` onto a visible in-widget control's `.keyboardShortcut` |
+| An accessory app (no Dock icon) shows no main menu bar, so `⌘N` and `⌘Q` may stop firing | Breaks P2-T4's shortcut | P3-T1 | Keep Quit in `•••` and the panel; move `⌘N` onto a visible in-widget control's `.keyboardShortcut`. **Applied in P3-T1:** the panel's scene never reached app commands, so `⌘N` is on the composer's hint button. |
 | An accessory app's windows may not become key on first click, so the composer can't take typing | Breaks capture | P3-T1 | Activate the app (`NSApp.activate`) when the panel or floating window is clicked |
 | On-device speech recognition isn't available for every language or Mac | Voice capture can't stay local | P3-T3 | Disable the microphone with an explanation; never fall back to server recognition |
 
