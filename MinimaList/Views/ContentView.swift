@@ -41,7 +41,6 @@ struct ContentView: View {
             composer
         }
         .defaultFocus($isInputFocused, true)
-        .focusedSceneValue(\.focusComposer) { isInputFocused = true }
         .fontDesign(.rounded)
         .frame(width: 380, height: 610)
         .background(Color.widgetBackground)
@@ -176,9 +175,13 @@ struct ContentView: View {
             }
             // Back to the composer after a pick, so Return adds the task as the keyboard walkthrough expects.
             CategorySelector(selection: $category) { isInputFocused = true }
-            Text("Return to add · ⌘N to focus")
+            // An accessory app shows no menu bar, and the panel's scene doesn't reach app commands, so ⌘N lives on a visible control.
+            Button("Return to add · ⌘N to focus") { isInputFocused = true }
+                .buttonStyle(.plain)
                 .font(.caption)
                 .foregroundStyle(Color.textSecondary)
+                .keyboardShortcut("n")
+                .accessibilityLabel("Focus new task field")
         }
         .padding(.horizontal, 16)
         .padding(.top, 12)
@@ -189,18 +192,6 @@ struct ContentView: View {
         store.add(title: text, category: category)
         text = ""
         isInputFocused = true
-    }
-}
-
-// A classic key, because `@Entry` warns that a closure value may invalidate dependents on every update.
-private struct FocusComposerKey: FocusedValueKey {
-    typealias Value = () -> Void
-}
-
-extension FocusedValues {
-    var focusComposer: (() -> Void)? {
-        get { self[FocusComposerKey.self] }
-        set { self[FocusComposerKey.self] = newValue }
     }
 }
 

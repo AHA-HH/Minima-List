@@ -17,26 +17,13 @@ struct MinimaListApp: App {
         .windowStyle(.hiddenTitleBar)
         .windowResizability(.contentSize)
         .commands {
-            // Replaces File › New Window, which would otherwise open a second widget on ⌘N.
-            CommandGroup(replacing: .newItem) {
-                NewTaskButton()
-            }
+            // Removes File › New Window, which would otherwise open a second widget on ⌘N; the widget's hint button owns ⌘N.
+            CommandGroup(replacing: .newItem) {}
         }
 
         MenuBarExtra("Minima List", systemImage: "checklist") {
             ContentView(store: store, isFloatingWindowShown: isFloatingWindowShown)
         }
         .menuBarExtraStyle(.window)
-    }
-}
-
-// A view inside the command group can read focused values where the Commands type itself can't always.
-private struct NewTaskButton: View {
-    @FocusedValue(\.focusComposer) private var focusComposer
-
-    var body: some View {
-        Button("New Task") { focusComposer?() }
-            .keyboardShortcut("n")
-            .disabled(focusComposer == nil)
     }
 }
