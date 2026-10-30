@@ -6,13 +6,13 @@
 
 ## Tasks
 
-Each task edits `ContentView.swift`, and T1 and T3 both change the app target's build settings, so they run one after another. Briefs are written before each wave starts.
+Each task edits `ContentView.swift`, and T1 and T3 both change the app target's build settings, so they run one after another.
 
-| Wave | ID | Task | Depends on |
+| Wave | ID | Brief | Depends on |
 | --- | --- | --- | --- |
-| 1 | P3-T1 | Menu-bar app: no Dock icon, `MenuBarExtra` panel, Show/Hide floating window (§8.6) | P2 |
-| 2 | P3-T2 | Pin and collapse to a count bubble (§8.7) | P3-T1 |
-| 3 | P3-T3 | Voice capture with on-device speech recognition (§8.8) | P3-T2 |
+| 1 | P3-T1 | [Menu-bar app](T1-menu-bar.md) | P2 |
+| 2 | P3-T2 | [Pin and collapse to a count bubble](T2-pin-bubble.md) | P3-T1 |
+| 3 | P3-T3 | [Voice capture](T3-voice-capture.md) | P3-T2 |
 
 - [ ] P3-T1 · [ ] P3-T2 · [ ] P3-T3
 
